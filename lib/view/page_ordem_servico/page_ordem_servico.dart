@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:anim_search_bar/anim_search_bar.dart';
+import 'package:servicecontrolapp/view/page_ordem_servico/page_search_client.dart';
 
+import '../../model/model_client.dart';
 
 class PageOrdemDeServico extends StatefulWidget {
   const PageOrdemDeServico({super.key});
@@ -12,62 +14,33 @@ class PageOrdemDeServico extends StatefulWidget {
 }
 
 class _PageOrdemDeServicoState extends State<PageOrdemDeServico> {
-  bool controle = true;
+  late ClienteModel cliente;
+
   @override
   Widget build(BuildContext context) {
-    TextEditingController _clientSerach = TextEditingController();
     return Scaffold(
       appBar: AppBar(),
       body: Padding(
         padding: const EdgeInsets.all(10.0),
         child: Column(
           children: [
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const Text('Cliente'),
-                Align(
-                  alignment: Alignment.center,
-                  child: AnimSearchBar(
-                    rtl: true,
-                    color: Colors.grey.shade200,
-                    boxShadow: false,
-                    width: 400,
-                    textController: _clientSerach,
-                    
-                    onSuffixTap: () {
-                      print('cliquei...');
-                    },
-                    onSubmitted: (p0) {
-                            print('cliquei...2');
-                    },
-                  ),
-                ),
-                // const Text('Cliente'),
-                // IconButton(
-                //   onPressed: () {},
-                //   icon: const Icon(Icons.search),
-                // ),
-              ],
+            ElevatedButton(
+              onPressed: () async {
+               ClienteModel cliente = await Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const PageSearchClient()
+                  )
+                );
+                if (!mounted) return;
+                setState(() {
+                  
+                });
+                print(cliente.razaoSocial);
+              },
+              child: const Text('Cliente'),
+
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 10),
-              child: Container(
-                color: Colors.grey.shade200,
-                height: 60,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    const Text('Cliente'),
-                    IconButton(
-                      onPressed: () {},
-                      icon: const Icon(Icons.search),
-                    ),
-                  ],
-                ),
-              ),
-            )
           ],
         ),
       ),

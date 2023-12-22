@@ -14,11 +14,6 @@ class RepositoryClient extends ChangeNotifier {
   bool _loading = false;
   bool get loading => _loading;
 
-  RepositoryClient() {
-    print('passou pelo construtor');
-    // loadClients();
-  }
-
   void registerClient({
     required BuildContext? context,
     required final String razaoSocial,
@@ -121,6 +116,25 @@ class RepositoryClient extends ChangeNotifier {
 
   Future<void> deleteClient(String id) async {
     await FirebaseService().deleteClientFirestore('Clientes', id);
+    notifyListeners();
+  }
+
+  void fitraClient(String query, List<ClienteModel> listaClientes) {
+    _listClients = [];
+    _listClients = listaClientes
+        .where(
+          (element) => element.razaoSocial.toLowerCase().contains(
+                query.toLowerCase(),
+              ),
+        )
+        .toList();
+
+        print('tamanho: ${_listClients.length}');
+    _listClients.forEach(
+      (element) {
+        print('Razao Social: ${element.razaoSocial}');
+      },
+    );
     notifyListeners();
   }
 }

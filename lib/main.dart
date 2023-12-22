@@ -36,7 +36,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.grey,
       ),
-      home: const PageOrdemDeServico(),
+      home: const PageInicial(),
     );
   }
 }
