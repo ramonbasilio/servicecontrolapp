@@ -11,7 +11,7 @@ class PageClient extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    RepositoryClient().repositoryClientProvider(context).loadClients();
+    // RepositoryClient().repositoryClientProvider(context).loadClients();
     return Scaffold(
       backgroundColor: Colors.grey.shade300,
       appBar: AppBar(
@@ -26,7 +26,11 @@ class PageClient extends StatelessWidget {
               ? Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: const [
-                    Center(child: Text('Nenhum cliente cadastrado', style: TextStyle(fontSize: 20),)),
+                    Center(
+                        child: Text(
+                      'Nenhum cliente cadastrado',
+                      style: TextStyle(fontSize: 20),
+                    )),
                   ],
                 )
               : ListView.builder(

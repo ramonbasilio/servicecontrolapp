@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:servicecontrolapp/view/page_ordem_servico/page_ordem_servico.dart';
 import 'package:servicecontrolapp/view/pages_client/page_client.dart';
+import '../controller/Repository/repository_client.dart';
 import '../widgets/widget_card_page_inicial.dart';
 
 class PageInicial extends StatelessWidget {
@@ -8,6 +9,8 @@ class PageInicial extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    RepositoryClient().repositoryClientProvider(context).loadClients();
+
     return Scaffold(
         appBar: AppBar(
           title: const Center(
@@ -21,7 +24,7 @@ class PageInicial extends StatelessWidget {
           ),
           WidgetCardPageInicial(
             nome: 'Ordem de Serviço',
-            rota: const PageOrdemDeServico(),
+            rota:  PageOrdemDeServico(),
           ),
           WidgetCardPageInicial(
             nome: 'Inventário',

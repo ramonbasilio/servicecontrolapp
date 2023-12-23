@@ -17,7 +17,9 @@ class PageSearchClient extends StatelessWidget {
     final _provider = Provider.of<RepositoryClient>(context, listen: false);
     RepositoryClient().repositoryClientProvider(context).loadClients();
     List<ClienteModel> clients = _provider.listClients;
-
+    for (int i = 0; i > clients.length; i++) {
+      print('${clients[i]}-$i');
+    }
     return Scaffold(
       appBar: AppBar(
         title: const Text('Pesquisar cliente'),
@@ -43,7 +45,6 @@ class PageSearchClient extends StatelessWidget {
                 ),
               ),
               const Divider(),
-
               Consumer<RepositoryClient>(builder: (context, _, child) {
                 if (_provider.loading) {
                   return const Center(child: CircularProgressIndicator());
@@ -64,6 +65,7 @@ class PageSearchClient extends StatelessWidget {
                           child: ListView.builder(
                             itemCount: _provider.listClients.length,
                             itemBuilder: (context, index) {
+                              // 'tamanho da pesquisa: ${_provider.listClients.length}');
                               return Column(
                                 children: [
                                   Padding(
@@ -74,9 +76,20 @@ class PageSearchClient extends StatelessWidget {
                                         color: Colors.white,
                                       ),
                                       child: ListTile(
-                                        onTap: ()  {
-                                          Navigator.pop(context, _provider.listClients[index]);
-         
+                                        onTap: () {
+                                          clients.forEach(
+                                            (element) {
+                                              print(element);
+                                            },
+                                          );
+                                          RepositoryClient()
+                                              .repositoryClientProvider(context)
+                                              .loadClients();
+                                          print('index: $index');
+
+                                          Navigator.pop(
+                                            context,clients[index]
+                                          );
                                         },
                                         leading: CircleAvatar(
                                           backgroundColor: Colors.grey.shade800,
@@ -86,7 +99,8 @@ class PageSearchClient extends StatelessWidget {
                                                 color: Colors.white),
                                           ),
                                         ),
-                                        title: Text(_provider.listClients[index].razaoSocial),
+                                        title: Text(_provider
+                                            .listClients[index].razaoSocial),
                                       ),
                                     ),
                                   ),

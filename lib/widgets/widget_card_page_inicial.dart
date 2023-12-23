@@ -27,10 +27,10 @@ class WidgetCardPageInicial extends StatelessWidget {
       },
       child: Card(
         margin: const EdgeInsets.all(15),
-        color: Colors.amber.shade100,
+        color: Colors.grey.shade800,
         child: SizedBox(
           height: 50,
-          child: Center(child: Text(nome)),
+          child: Center(child: Text(nome, style: const TextStyle(color: Colors.white),)),
         ),
       ),
     );
