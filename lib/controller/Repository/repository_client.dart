@@ -102,7 +102,6 @@ class RepositoryClient extends ChangeNotifier {
     _resultFirestore.forEach((element) {
       _listClients.add(ClienteModel.fromMap(element));
     });
-    print('passou no getAllClients');
     _loading = false;
     notifyListeners();
   }
@@ -119,7 +118,8 @@ class RepositoryClient extends ChangeNotifier {
     notifyListeners();
   }
 
-  void fitraClient(String query, List<ClienteModel> listaClientes) {
+  List<ClienteModel> fitraClient(
+      String query, List<ClienteModel> listaClientes) {
     _listClients = [];
     _listClients = listaClientes
         .where(
@@ -129,12 +129,13 @@ class RepositoryClient extends ChangeNotifier {
         )
         .toList();
 
-        print('tamanho: ${_listClients.length}');
-    _listClients.forEach(
-      (element) {
-        print('Razao Social: ${element.razaoSocial}');
-      },
-    );
+    // print('tamanho: ${_listClients.length}');
+    // _listClients.forEach(
+    //   (element) {
+    //     print('Razao Social: ${element.razaoSocial}');
+    //   },
+    // );
     notifyListeners();
+    return _listClients;
   }
 }

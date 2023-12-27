@@ -1,13 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:provider/provider.dart';
 import 'package:servicecontrolapp/controller/Repository/repository_client.dart';
-
-import '../../controller/Repository/repository_client.dart';
-import '../../controller/Repository/repository_client.dart';
 import '../../model/model_client.dart';
-import '../../widgets/widget_detail_client.dart';
 
 class PageSearchClient extends StatelessWidget {
   const PageSearchClient({super.key});
@@ -15,11 +9,10 @@ class PageSearchClient extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final _provider = Provider.of<RepositoryClient>(context, listen: false);
+    TextEditingController pesquisaController = TextEditingController();
     RepositoryClient().repositoryClientProvider(context).loadClients();
     List<ClienteModel> clients = _provider.listClients;
-    for (int i = 0; i > clients.length; i++) {
-      print('${clients[i]}-$i');
-    }
+    List<ClienteModel> retorno = [];
     return Scaffold(
       appBar: AppBar(
         title: const Text('Pesquisar cliente'),
@@ -29,9 +22,14 @@ class PageSearchClient extends StatelessWidget {
           padding: const EdgeInsets.all(8.0),
           child: Column(
             children: [
-              TextField(
+              TextFormField(
+                controller: pesquisaController,
                 onChanged: (value) {
-                  _provider.fitraClient(value, clients);
+                  retorno =
+                      _provider.fitraClient(value, clients);
+                  retorno.forEach((element) {
+                    print('Retorno: ${element.razaoSocial}');
+                  });
                 },
                 decoration: const InputDecoration(
                   labelText: "Cliente",
@@ -55,10 +53,11 @@ class PageSearchClient extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: const [
                             Center(
-                                child: Text(
-                              'Nenhum cliente cadastrado',
-                              style: TextStyle(fontSize: 20),
-                            )),
+                              child: Text(
+                                'Nenhum cliente cadastrado',
+                                style: TextStyle(fontSize: 20),
+                              ),
+                            ),
                           ],
                         )
                       : Expanded(
@@ -88,8 +87,10 @@ class PageSearchClient extends StatelessWidget {
                                           print('index: $index');
 
                                           Navigator.pop(
-                                            context,clients[index]
-                                          );
+                                              context,
+                                              pesquisaController.text.isEmpty
+                                                  ? clients[index]
+                                                  : retorno[index]);
                                         },
                                         leading: CircleAvatar(
                                           backgroundColor: Colors.grey.shade800,
