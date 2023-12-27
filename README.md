@@ -11,10 +11,7 @@ A ideia principal do projeto é permiter que técnicos de campo possam cadastrar
 O projeto está sendo desenvolvido em Flutter, pois é a framework que venho estudando nos últimos meses e esse projeto faz parte do desenvolvimento do meu portifólio pessoal. 
 Para armazenamento dos dados está sendo utilizado o Cloud Firestore do Firebase. Também será utilizado o Hosting do Firebase para deploy do webapp (fase posterior).
 
-![Texto Alternativo](https://ibb.co/6mFMXGr)
+![WhatsApp Image 2023-12-27 at 00 05 24 (2)](https://github.com/ramonbasilio/servicecontrolapp/assets/37743546/47344311-a7ed-4af1-9b5b-51c33c688630)
 
 
-https://ibb.co/6mFMXGr
-https://ibb.co/KsnMWFG
-https://ibb.co/8jQqc11
 
