@@ -1,8 +1,14 @@
+import 'dart:ffi';
+import 'dart:io';
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:anim_search_bar/anim_search_bar.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:servicecontrolapp/view/page_ordem_servico/page_search_client.dart';
+import 'package:signature/signature.dart';
 
 import '../../model/model_client.dart';
 
@@ -22,6 +28,26 @@ class _PageOrdemDeServicoState extends State<PageOrdemDeServico> {
   TextEditingController modeloNomeController = TextEditingController();
   TextEditingController numerSerieController = TextEditingController();
   TextEditingController resumoAtendimentoController = TextEditingController();
+  SignatureController controller =
+      SignatureController(penStrokeWidth: 2, penColor: Colors.white);
+  Uint8List? fileContent;
+
+  @override
+  void dispose() {
+    equipamentoNomeController.dispose();
+    marcaNomeController.dispose();
+    modeloNomeController.dispose();
+    numerSerieController.dispose();
+    resumoAtendimentoController.dispose();
+    controller.dispose();
+    super.dispose();
+  }
+
+  Future<String> getFilePath() async {
+    Directory directory = await getApplicationDocumentsDirectory();
+    String filePath = '${directory.path}/assintura.pgn';
+    return filePath;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +72,7 @@ class _PageOrdemDeServicoState extends State<PageOrdemDeServico> {
                               MaterialPageRoute(
                                   builder: (context) =>
                                       const PageSearchClient()));
-        
+
                       if (clienteSelecionado != null) {
                         setState(() {
                           widget.clienteSelecionado = clienteSelecionado;
@@ -58,7 +84,8 @@ class _PageOrdemDeServicoState extends State<PageOrdemDeServico> {
                   const Center(
                     child: Text(
                       'DADOS DO CLIENTE',
-                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17),
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 17),
                     ),
                   ),
                   TextButton(
@@ -75,7 +102,7 @@ class _PageOrdemDeServicoState extends State<PageOrdemDeServico> {
                 child: Container(
                   padding: const EdgeInsets.all(10),
                   width: double.infinity,
-                  height: 150,
+                  // height: double.infini,
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(6),
                       border: Border.all(),
@@ -83,6 +110,7 @@ class _PageOrdemDeServicoState extends State<PageOrdemDeServico> {
                   child: widget.clienteSelecionado == null
                       ? const Text('Nenhum cliente selecionado')
                       : Column(
+                        mainAxisSize: MainAxisSize.min,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(widget.clienteSelecionado!.razaoSocial,
@@ -109,7 +137,8 @@ class _PageOrdemDeServicoState extends State<PageOrdemDeServico> {
                   controller: equipamentoNomeController,
                   decoration: InputDecoration(
                       enabledBorder: const OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.black, width: 1)),
+                          borderSide:
+                              BorderSide(color: Colors.black, width: 1)),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(8),
                       ),
@@ -123,7 +152,8 @@ class _PageOrdemDeServicoState extends State<PageOrdemDeServico> {
                   controller: marcaNomeController,
                   decoration: InputDecoration(
                       enabledBorder: const OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.black, width: 1)),
+                          borderSide:
+                              BorderSide(color: Colors.black, width: 1)),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(8),
                       ),
@@ -137,7 +167,8 @@ class _PageOrdemDeServicoState extends State<PageOrdemDeServico> {
                   controller: modeloNomeController,
                   decoration: InputDecoration(
                       enabledBorder: const OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.black, width: 1)),
+                          borderSide:
+                              BorderSide(color: Colors.black, width: 1)),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(8),
                       ),
@@ -151,7 +182,8 @@ class _PageOrdemDeServicoState extends State<PageOrdemDeServico> {
                   controller: numerSerieController,
                   decoration: InputDecoration(
                       enabledBorder: const OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.black, width: 1)),
+                          borderSide:
+                              BorderSide(color: Colors.black, width: 1)),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(8),
                       ),
@@ -173,7 +205,8 @@ class _PageOrdemDeServicoState extends State<PageOrdemDeServico> {
                   controller: resumoAtendimentoController,
                   decoration: InputDecoration(
                       enabledBorder: const OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.black, width: 1)),
+                          borderSide:
+                              BorderSide(color: Colors.black, width: 1)),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(8),
                       ),
@@ -181,6 +214,51 @@ class _PageOrdemDeServicoState extends State<PageOrdemDeServico> {
                       hintText: 'Resumo do atendimento'),
                 ),
               ),
+              const Divider(),
+              const Center(
+                child: Text(
+                  'ASSINATURA CLIENTE',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8.0),
+                child: Signature(
+                  controller: controller,
+                  height: 200,
+                ),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  ElevatedButton(
+                      onPressed: () async {
+                        final path = await File(await getFilePath()).create();
+                        Uint8List? bytes = await controller.toPngBytes();
+                        await path.writeAsBytes(bytes!);
+                        File file = File(await getFilePath());
+                        fileContent = await file.readAsBytes();
+                        setState(() {});
+                      },
+                      child: const Text('Confirmar')),
+                  ElevatedButton(
+                      onPressed: () {
+                        controller.clear();
+                      },
+                      child: const Text('Limpar')),
+                ],
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8.0),
+                child: Container(
+                  color: Colors.grey,
+                  width: double.infinity,
+                  height: 200,
+                  child: fileContent == null
+                      ? const Center(child: Text('Sem assinatura salva'))
+                      : Image.memory(fileContent!),
+                ),
+              )
             ],
           ),
         ),
