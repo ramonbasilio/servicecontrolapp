@@ -1,9 +1,13 @@
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:signature/signature.dart';
 import 'package:path_provider/path_provider.dart';
 import 'dart:io';
+
+import 'helper/helper_pdf.dart';
+import 'model/model_test.dart';
 
 class PageTeste extends StatefulWidget {
   const PageTeste({super.key});
@@ -13,81 +17,43 @@ class PageTeste extends StatefulWidget {
 }
 
 class _PageTesteState extends State<PageTeste> {
-  SignatureController controller =
-      SignatureController(penStrokeWidth: 2, penColor: Colors.white);
-  Uint8List? fileContent;
+  Future<String> localPath() async {
+    final directory = await getApplicationDocumentsDirectory();
 
-  @override
-  void dispose() {
-    controller.dispose();
-    super.dispose();
+    return directory.path;
   }
 
-  Future<String> getFilePath() async {
-    Directory directory = await getApplicationDocumentsDirectory();
-    String filePath = '${directory.path}/assintura.pgn';
-    return filePath;
+  Future<File> localFile() async {
+    final path = await localPath();
+    return File('$path/exemplo.pdf');
   }
 
   @override
   Widget build(BuildContext context) {
+    Orcamento orcamento = OrcamentoMoc().meuOrcamento;
     return Scaffold(
       appBar: AppBar(
         title: const Text('Pagina de teste'),
       ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Signature(
-            controller: controller,
-            width: 350,
-            height: 200,
-          ),
-          const SizedBox(
-            height: 50,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              ElevatedButton(
-                onPressed: () {
-                  controller.clear();
-                },
-                child: const Text('Limpar'),
-              ),
-              ElevatedButton(
-                onPressed: () async {
-                  try {
-                    final path = await File(await getFilePath()).create();
-                    Uint8List? bytes = await controller.toPngBytes();
-                    await path
-                        .writeAsBytes(bytes!)
-                        .then((value) => print('salvou...'));
-                  } catch (e) {
-                    print(e);
-                  }
-                },
-                child: const Text('Salvar'),
-              ),
-              ElevatedButton(
-                onPressed: () async {
-                  File file = File(await getFilePath());
-                  fileContent = await file.readAsBytes();
-                  setState(() {}); // <<<<<<<< PRECISO CORRIGIR ISSO
-                },
-                child: const Text('Ler'),
-              ),
-            ],
-          ),
-          Container(
-            color: Colors.grey,
-            width: 350,
-            height: 200,
-            child: fileContent == null
-                ? const Text('Sem imagem')
-                : Image.memory(fileContent!),
-          )
-        ],
+      body: SafeArea(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.max,
+          children: [
+            Center(
+                child: ElevatedButton(
+              onPressed: () async {
+                final RenderBox box = context.findRenderObject() as RenderBox;
+                GeneratePdf generatePdf = GeneratePdf(orcamento: orcamento);
+                generatePdf.generatePdf();
+                File file = await localFile();
+                
+                Share.shareXFiles([XFile(file.path)]);
+              },
+              child: const Text('Gerar pdf'),
+            )),
+          ],
+        ),
       ),
     );
   }

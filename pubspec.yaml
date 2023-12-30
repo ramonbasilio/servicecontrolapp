@@ -48,6 +48,9 @@ dependencies:
   image_gallery_saver: ^2.0.3
   get: ^4.6.5
   path_provider: ^2.1.1
+  pdf: ^3.10.1
+  printing: ^5.10.4
+  share_plus: ^7.2.1
 
 dev_dependencies:
   flutter_test:

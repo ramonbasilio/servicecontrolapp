@@ -233,7 +233,7 @@ class _PageOrdemDeServicoState extends State<PageOrdemDeServico> {
                 children: [
                   ElevatedButton(
                       onPressed: () async {
-                        final path = await File(await getFilePath()).create();
+                        File path = await File(await getFilePath()).create();
                         Uint8List? bytes = await controller.toPngBytes();
                         await path.writeAsBytes(bytes!);
                         File file = File(await getFilePath());
