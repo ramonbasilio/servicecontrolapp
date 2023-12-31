@@ -2,14 +2,15 @@ import 'dart:typed_data';
 import 'dart:async';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
+import '../model/model_os.dart';
 import '../model/model_test.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
 
 class GeneratePdf {
-  Orcamento orcamento;
-  GeneratePdf({required this.orcamento});
+  OrdemServicoModel ordemServico;
+  GeneratePdf({required this.ordemServico});
 
   Future<String> get localPath async {
     final directory = await getApplicationDocumentsDirectory();
@@ -24,7 +25,6 @@ class GeneratePdf {
 
   Future<File> writeCounter(Uint8List pdf) async {
     final file = await localFile;
-
     // Write the file
     return file.writeAsBytes(pdf);
   }
@@ -45,9 +45,9 @@ class GeneratePdf {
         padding: const pw.EdgeInsets.only(top: 30, left: 25, right: 25),
         child: (pw.Column(
           children: [
-            pw.Text('Nome do cliente: ${orcamento.cliente}'),
-            pw.Text('Nome da peça: ${orcamento.peca}'),
-            pw.Text('Valor: R\$ ${orcamento.preco.toString()}'),
+            pw.Text('Nome do cliente: ${ordemServico.cliente!.razaoSocial}'),
+            pw.Text('Nome da peça: ${ordemServico.cliente!.cnpj}'),
+            pw.Text('Valor: R\$ ${ordemServico.descricao}'),
           ],
         )),
       ),

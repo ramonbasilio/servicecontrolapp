@@ -50,49 +50,49 @@ class RepositoryClient extends ChangeNotifier {
     ScaffoldMessenger.of(context!).showSnackBar(snackBar);
   }
 
-  void registerOrdemServico({
-    required BuildContext? context,
-    required final String id,
-    required final String numOrdemServico,
-    required final ClienteModel cliente,
-    required final String equipamento,
-    required final String modelo,
-    required final String marca,
-    required final String data,
-    required final String horaInicial,
-    required final String horaFinal,
-    required final String descrSimples,
-    required final String tipoAtendimento,
-    required final String descrCompleta,
-    required final String nomeResponsavel,
-    required final String assinatura,
-  }) async {
-    String id = const Uuid().v4();
-    OrdemServicoModel _ordemDeServicoModel = OrdemServicoModel(
-      id: id,
-      numOrdemServico: numOrdemServico,
-      cliente: cliente,
-      equipamento: equipamento,
-      modelo: modelo,
-      marca: marca,
-      data: data,
-      horaInicial: horaInicial,
-      horaFinal: horaFinal,
-      descrSimples: descrSimples,
-      tipoAtendimento: tipoAtendimento,
-      descrCompleta: descrCompleta,
-      nomeResponsavel: nomeResponsavel,
-      assinatura: assinatura,
-    );
+  // void registerOrdemServico({
+  //   required BuildContext? context,
+  //   required final String id,
+  //   required final String numOrdemServico,
+  //   required final ClienteModel cliente,
+  //   required final String equipamento,
+  //   required final String modelo,
+  //   required final String marca,
+  //   required final String data,
+  //   required final String horaInicial,
+  //   required final String horaFinal,
+  //   required final String descrSimples,
+  //   required final String tipoAtendimento,
+  //   required final String descrCompleta,
+  //   required final String nomeResponsavel,
+  //   required final String assinatura,
+  // }) async {
+  //   String id = const Uuid().v4();
+  //   OrdemServicoModel _ordemDeServicoModel = OrdemServicoModel(
+  //     id: id,
+  //     numOrdemServico: numOrdemServico,
+  //     cliente: cliente,
+  //     equipamento: equipamento,
+  //     modelo: modelo,
+  //     marca: marca,
+  //     data: data,
+  //     horaInicial: horaInicial,
+  //     horaFinal: horaFinal,
+  //     descrSimples: descrSimples,
+  //     tipoAtendimento: tipoAtendimento,
+  //     descrCompleta: descrCompleta,
+  //     nomeResponsavel: nomeResponsavel,
+  //     assinatura: assinatura,
+  //   );
 
-    String _response = await FirebaseService()
-        .registerFirestore('Ordem_de_Servico', _ordemDeServicoModel.toMap());
+  //   String _response = await FirebaseService()
+  //       .registerFirestore('Ordem_de_Servico', _ordemDeServicoModel.toMap());
 
-    final snackBar = SnackBar(
-      content: Text(_response),
-    );
-    ScaffoldMessenger.of(context!).showSnackBar(snackBar);
-  }
+  //   final snackBar = SnackBar(
+  //     content: Text(_response),
+  //   );
+  //   ScaffoldMessenger.of(context!).showSnackBar(snackBar);
+  // }
 
   Future<void> getAllClients() async {
     _loading = true;

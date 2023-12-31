@@ -1,60 +1,68 @@
-import 'dart:typed_data';
+// // ignore_for_file: use_build_context_synchronously
 
-import 'package:flutter/material.dart';
-import 'package:share_plus/share_plus.dart';
-import 'package:signature/signature.dart';
-import 'package:path_provider/path_provider.dart';
-import 'dart:io';
+// import 'dart:typed_data';
 
-import 'helper/helper_pdf.dart';
-import 'model/model_test.dart';
+// import 'package:flutter/material.dart';
+// import 'package:servicecontrolapp/page_viwer_pdf.dart';
+// import 'package:share_plus/share_plus.dart';
+// import 'package:signature/signature.dart';
+// import 'package:path_provider/path_provider.dart';
+// import 'dart:io';
 
-class PageTeste extends StatefulWidget {
-  const PageTeste({super.key});
+// import 'helper/helper_pdf.dart';
+// import 'model/model_test.dart';
 
-  @override
-  State<PageTeste> createState() => _PageTesteState();
-}
+// class PageTeste extends StatefulWidget {
+//   const PageTeste({super.key});
 
-class _PageTesteState extends State<PageTeste> {
-  Future<String> localPath() async {
-    final directory = await getApplicationDocumentsDirectory();
+//   @override
+//   State<PageTeste> createState() => _PageTesteState();
+// }
 
-    return directory.path;
-  }
+// class _PageTesteState extends State<PageTeste> {
+//   Future<String> localPath() async {
+//     final directory = await getApplicationDocumentsDirectory();
 
-  Future<File> localFile() async {
-    final path = await localPath();
-    return File('$path/exemplo.pdf');
-  }
+//     return directory.path;
+//   }
 
-  @override
-  Widget build(BuildContext context) {
-    Orcamento orcamento = OrcamentoMoc().meuOrcamento;
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Pagina de teste'),
-      ),
-      body: SafeArea(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          mainAxisSize: MainAxisSize.max,
-          children: [
-            Center(
-                child: ElevatedButton(
-              onPressed: () async {
-                final RenderBox box = context.findRenderObject() as RenderBox;
-                GeneratePdf generatePdf = GeneratePdf(orcamento: orcamento);
-                generatePdf.generatePdf();
-                File file = await localFile();
-                
-                Share.shareXFiles([XFile(file.path)]);
-              },
-              child: const Text('Gerar pdf'),
-            )),
-          ],
-        ),
-      ),
-    );
-  }
-}
+//   Future<File> localFile() async {
+//     final path = await localPath();
+//     return File('$path/exemplo.pdf');
+//   }
+
+//   @override
+//   Widget build(BuildContext context) {
+//     Orcamento orcamento = OrcamentoMoc().meuOrcamento;
+//     return Scaffold(
+//       appBar: AppBar(
+//         title: const Text('Pagina de teste'),
+//       ),
+//       body: SafeArea(
+//         child: Column(
+//           mainAxisAlignment: MainAxisAlignment.center,
+//           mainAxisSize: MainAxisSize.max,
+//           children: [
+//             Center(
+//                 child: ElevatedButton(
+//               onPressed: () async {
+//                 final RenderBox box = context.findRenderObject() as RenderBox;
+//                 GeneratePdf generatePdf = GeneratePdf(orcamento: orcamento);
+//                 generatePdf.generatePdf();
+//                 File file = await localFile();
+//                 Navigator.push(
+//                     context,
+//                     MaterialPageRoute(
+//                       builder: (context) => ViwerPdf(path: file.path,),
+//                     ));
+
+//                 // Share.shareXFiles([XFile(file.path)]);
+//               },
+//               child: const Text('Gerar pdf'),
+//             )),
+//           ],
+//         ),
+//       ),
+//     );
+//   }
+// }
