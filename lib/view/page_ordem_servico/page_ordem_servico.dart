@@ -1,12 +1,13 @@
-import 'dart:ffi';
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:io';
 import 'dart:typed_data';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:anim_search_bar/anim_search_bar.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:servicecontrolapp/page_viwer_pdf.dart';
 import 'package:servicecontrolapp/view/page_ordem_servico/page_search_client.dart';
 import 'package:signature/signature.dart';
 
@@ -46,6 +47,16 @@ class _PageOrdemDeServicoState extends State<PageOrdemDeServico> {
     resumoAtendimentoController.dispose();
     controller.dispose();
     super.dispose();
+  }
+
+  Future<String> localPath() async {
+    final directory = await getApplicationDocumentsDirectory();
+    return directory.path;
+  }
+
+  Future<File> localFile() async {
+    final path = await localPath();
+    return File('$path/exemplo.pdf');
   }
 
   Future<String> getFilePath() async {
@@ -325,43 +336,77 @@ class _PageOrdemDeServicoState extends State<PageOrdemDeServico> {
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.all(15.0),
         child: ElevatedButton(
-          onPressed: () {
-            if (widget.clienteSelecionado == null) {
-              setState(() {
-                controleCampoCliente = true;
-              });
-            } else {
-              setState(() {
-                controleCampoCliente = false;
-              });
-            }
-            if (controller.isEmpty) {
-              setState(() {
-                controleCampoAssinatura = true;
-              });
-            } else {
-              setState(() {
-                controleCampoAssinatura = false;
-              });
-            }
-            if (_formKey.currentState!.validate() &&
-                controleCampoAssinatura == false &&
-                controleCampoCliente == false &&
-                controller.isNotEmpty) {
-              print('passou tudo ok');
-              OrdemServicoModel ordemServicoModel = OrdemServicoModel(
-                cliente: widget.clienteSelecionado!,
-                descricao: resumoAtendimentoController.text,
-                equipamento: equipamentoNomeController.text,
-                marca: marcaNomeController.text,
-                modelo: modeloNomeController.text,
-                ns: numerSerieController.text,
-                assinatura: fileContent!,
-              );
-              GeneratePdf generatePdf =
-                  GeneratePdf(ordemServico: ordemServicoModel);
-              generatePdf.generatePdf();
-            }
+          onPressed: () async {
+            // if (widget.clienteSelecionado == null) {
+            //   setState(() {
+            //     controleCampoCliente = true;
+            //   });
+            // } else {
+            //   setState(() {
+            //     controleCampoCliente = false;
+            //   });
+            // }
+            // if (controller.isEmpty) {
+            //   setState(() {
+            //     controleCampoAssinatura = true;
+            //   });
+            // } else {
+            //   setState(() {
+            //     controleCampoAssinatura = false;
+            //   });
+            // }
+            // if (_formKey.currentState!.validate() &&
+            //     controleCampoAssinatura == false &&
+            //     controleCampoCliente == false &&
+            //     controller.isNotEmpty) {
+            //   print('passou tudo ok');
+            //   OrdemServicoModel ordemServicoModel = OrdemServicoModel(
+            //     cliente: widget.clienteSelecionado!,
+            //     descricao: resumoAtendimentoController.text,
+            //     equipamento: equipamentoNomeController.text,
+            //     marca: marcaNomeController.text,
+            //     modelo: modeloNomeController.text,
+            //     ns: numerSerieController.text,
+            //     assinatura: fileContent!,
+            //   );
+
+            //   GeneratePdf generatePdf =
+            //       GeneratePdf(ordemServico: ordemServicoModel);
+            //   generatePdf.generatePdf();
+            //   File file = await localFile();
+            //   Navigator.push(
+            //       context,
+            //       MaterialPageRoute(
+            //         builder: (context) => ViwerPdf(
+            //           path: file.path,
+            //         ),
+            //       ));
+            // }
+
+            // ---------------------- TESTE ----------------------
+            OrdemServicoModel ordemServicoModel = OrdemServicoModel(
+              cliente: widget.clienteSelecionado!,
+              descricao:
+                  'Atendimento referente a troca de módulo. Testado e liberado para uso',
+              equipamento: 'Monitor Multiparametro',
+              marca: 'Medrad',
+              modelo: 'Veris 8600',
+              ns: '08452',
+              assinatura: fileContent!,
+            );
+
+            GeneratePdf generatePdf =
+                GeneratePdf(ordemServico: ordemServicoModel);
+            generatePdf.generatePdf();
+            File file = await localFile();
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ViwerPdf(
+                    path: file.path,
+                  ),
+                ));
+            // ---------------------- TESTE ----------------------
           },
           child: const Text('Gerar pdf'),
         ),
