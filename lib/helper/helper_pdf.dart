@@ -9,7 +9,7 @@ import '../model/model_test.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 
-class GeneratePdf extends StatelessWidget{
+class GeneratePdf extends StatelessWidget {
   OrdemServicoModel ordemServico;
   GeneratePdf({required this.ordemServico});
 
@@ -35,20 +35,14 @@ class GeneratePdf extends StatelessWidget{
       (await rootBundle.load('assets/logo.png')).buffer.asUint8List(),
     );
     pw.Document doc = pw.Document();
-    doc.addPage(pw.MultiPage(
+    doc.addPage(pw.Page(margin: pw.EdgeInsets.zero,
       pageFormat: PdfPageFormat.a4,
-      // header: (pw.Context context) {
-      //   return pw.Container(
-      //     height: 200,
-      //     color: PdfColors.white,
-      //     child: pw.Image(logo),
-      //   );
-      // },
       build: (pw.Context context) {
-        return [
-          pw.Padding(
-            padding: const pw.EdgeInsets.only(top: 30, left: 25, right: 25),
-            child: (pw.Column(
+        return pw.Padding(
+          padding: const pw.EdgeInsets.only(top: 30, left: 25, right: 25),
+          child: (pw.Container(
+            color: PdfColors.yellow500,
+            child: pw.Column(
               mainAxisAlignment: pw.MainAxisAlignment.start,
               children: [
                 pw.Container(
@@ -96,7 +90,7 @@ class GeneratePdf extends StatelessWidget{
                     'Nome do cliente: ${ordemServico.cliente!.razaoSocial}'),
                 pw.Text('Nome da peça: ${ordemServico.cliente!.cnpj}'),
                 pw.Text('Valor: R\$ ${ordemServico.descricao}'),
-                                pw.Container(
+                pw.Container(
                   height: 200,
                   color: PdfColors.white,
                   child: pw.Image(logo),
@@ -114,7 +108,7 @@ class GeneratePdf extends StatelessWidget{
                     'Nome do cliente: ${ordemServico.cliente!.razaoSocial}'),
                 pw.Text('Nome da peça: ${ordemServico.cliente!.cnpj}'),
                 pw.Text('Valor: R\$ ${ordemServico.descricao}'),
-                                pw.Container(
+                pw.Container(
                   height: 200,
                   color: PdfColors.white,
                   child: pw.Image(logo),
@@ -133,14 +127,14 @@ class GeneratePdf extends StatelessWidget{
                 pw.Text('Nome da peça: ${ordemServico.cliente!.cnpj}'),
                 pw.Text('Valor: R\$ ${ordemServico.descricao}'),
               ],
-            )),
-          ),
-        ];
+            ),
+          )),
+        );
       },
     ));
     writeCounter(await doc.save());
   }
-  
+
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
