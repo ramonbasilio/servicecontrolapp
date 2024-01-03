@@ -392,7 +392,7 @@ class _PageOrdemDeServicoState extends State<PageOrdemDeServico> {
               marca: 'Medrad',
               modelo: 'Veris 8600',
               ns: '08452',
-              assinatura: fileContent!,
+              // assinatura: fileContent!,
             );
 
             GeneratePdf generatePdf =

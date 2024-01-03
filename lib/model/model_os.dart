@@ -5,7 +5,7 @@ import 'dart:typed_data';
 import 'package:servicecontrolapp/model/model_client.dart';
 
 class OrdemServicoModel {
-  final ClienteModel? cliente;
+  final ClienteModel cliente;
   final String equipamento;
   final String modelo;
   final String marca;
@@ -20,6 +20,6 @@ class OrdemServicoModel {
     required this.marca,
     required this.ns,
     required this.descricao,
-    required this.assinatura,
+    this.assinatura,
   });
 }

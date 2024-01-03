@@ -9,7 +9,7 @@ import '../model/model_test.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 
-class GeneratePdf extends StatelessWidget {
+class GeneratePdf {
   OrdemServicoModel ordemServico;
   GeneratePdf({required this.ordemServico});
 
@@ -34,144 +34,112 @@ class GeneratePdf extends StatelessWidget {
     final logo = pw.MemoryImage(
       (await rootBundle.load('assets/logo.png')).buffer.asUint8List(),
     );
+
     pw.Document doc = pw.Document();
-    doc.addPage(pw.Page(margin: pw.EdgeInsets.zero,
-      pageFormat: PdfPageFormat.a4,
-      build: (pw.Context context) {
-        return pw.Padding(
-          padding: const pw.EdgeInsets.only(top: 30, left: 25, right: 25),
-          child: (pw.Container(
-            color: PdfColors.yellow500,
-            child: pw.Column(
-              mainAxisAlignment: pw.MainAxisAlignment.start,
-              children: [
-                pw.Container(
-                  height: 200,
-                  color: PdfColors.white,
-                  child: pw.Image(logo),
+    doc.addPage(
+      pw.MultiPage(
+        header: (pw.Context context) {
+          return pw.Container(
+              height: 100,
+              width: double.infinity,
+              color: PdfColor.fromHex('#f2f2f2'),
+              child: pw.Padding(
+                padding: const pw.EdgeInsets.all(10),
+                child: pw.Column(
+                  mainAxisAlignment: pw.MainAxisAlignment.spaceAround,
+                  children: [
+                    pw.Image(logo, height: 25),
+                    pw.Text('ORDEM DE SERVIÇO',
+                        style: const pw.TextStyle(fontSize: 25)),
+                  ],
                 ),
-                pw.Text(
-                    'Nome do cliente: ${ordemServico.cliente!.razaoSocial}'),
-                pw.Text('Nome da peça: ${ordemServico.cliente!.cnpj}'),
-                pw.Text('Valor: R\$ ${ordemServico.descricao}'),
-                pw.Container(
-                  height: 200,
-                  color: PdfColors.white,
-                  child: pw.Image(logo),
+              ));
+        },
+        margin: const pw.EdgeInsets.all(10),
+        pageFormat: PdfPageFormat.a4,
+        build: (pw.Context context) {
+          return <pw.Widget>[
+            pw.Divider(thickness: 0.09),
+            pw.Container(
+              width: double.infinity,
+              color: PdfColor.fromHex('#f2f2f2'),
+              child: pw.Padding(
+                padding: const pw.EdgeInsets.all(10),
+                child: pw.Column(
+                  mainAxisSize: pw.MainAxisSize.min,
+                  crossAxisAlignment: pw.CrossAxisAlignment.start,
+                  children: [
+                    pw.Text('DADOS DO CLIENTE',
+                        style: pw.TextStyle(
+                            fontSize: 21, fontWeight: pw.FontWeight.bold)),
+                    pw.Text('CLIENTE: ${ordemServico.cliente.razaoSocial}',
+                        style: const pw.TextStyle(fontSize: 15)),
+                    pw.Text('CNPJ: ${ordemServico.cliente.cnpj}',
+                        style: const pw.TextStyle(fontSize: 15)),
+                    pw.Text(
+                      '${ordemServico.cliente.endereco} nº ${ordemServico.cliente.numero} \nBairro: ${ordemServico.cliente.bairro} \nCidade: ${ordemServico.cliente.cidade} \nEstado: ${ordemServico.cliente.estado} \nCEP: ${ordemServico.cliente.cep}',
+                      style: const pw.TextStyle(fontSize: 15),
+                    )
+                  ],
                 ),
-                pw.Text(
-                    'Nome do cliente: ${ordemServico.cliente!.razaoSocial}'),
-                pw.Text('Nome da peça: ${ordemServico.cliente!.cnpj}'),
-                pw.Text('Valor: R\$ ${ordemServico.descricao}'),
-                pw.Container(
-                  height: 200,
-                  color: PdfColors.white,
-                  child: pw.Image(logo),
-                ),
-                pw.Text(
-                    'Nome do cliente: ${ordemServico.cliente!.razaoSocial}'),
-                pw.Text('Nome da peça: ${ordemServico.cliente!.cnpj}'),
-                pw.Text('Valor: R\$ ${ordemServico.descricao}'),
-                pw.Container(
-                  height: 200,
-                  color: PdfColors.white,
-                  child: pw.Image(logo),
-                ),
-                pw.Text(
-                    'Nome do cliente: ${ordemServico.cliente!.razaoSocial}'),
-                pw.Text('Nome da peça: ${ordemServico.cliente!.cnpj}'),
-                pw.Text('Valor: R\$ ${ordemServico.descricao}'),
-                pw.Container(
-                  height: 200,
-                  color: PdfColors.white,
-                  child: pw.Image(logo),
-                ),
-                pw.Text(
-                    'Nome do cliente: ${ordemServico.cliente!.razaoSocial}'),
-                pw.Text('Nome da peça: ${ordemServico.cliente!.cnpj}'),
-                pw.Text('Valor: R\$ ${ordemServico.descricao}'),
-                pw.Container(
-                  height: 200,
-                  color: PdfColors.white,
-                  child: pw.Image(logo),
-                ),
-                pw.Text(
-                    'Nome do cliente: ${ordemServico.cliente!.razaoSocial}'),
-                pw.Text('Nome da peça: ${ordemServico.cliente!.cnpj}'),
-                pw.Text('Valor: R\$ ${ordemServico.descricao}'),
-                pw.Container(
-                  height: 200,
-                  color: PdfColors.white,
-                  child: pw.Image(logo),
-                ),
-                pw.Text(
-                    'Nome do cliente: ${ordemServico.cliente!.razaoSocial}'),
-                pw.Text('Nome da peça: ${ordemServico.cliente!.cnpj}'),
-                pw.Text('Valor: R\$ ${ordemServico.descricao}'),
-                pw.Container(
-                  height: 200,
-                  color: PdfColors.white,
-                  child: pw.Image(logo),
-                ),
-                pw.Text(
-                    'Nome do cliente: ${ordemServico.cliente!.razaoSocial}'),
-                pw.Text('Nome da peça: ${ordemServico.cliente!.cnpj}'),
-                pw.Text('Valor: R\$ ${ordemServico.descricao}'),
-                pw.Container(
-                  height: 200,
-                  color: PdfColors.white,
-                  child: pw.Image(logo),
-                ),
-                pw.Text(
-                    'Nome do cliente: ${ordemServico.cliente!.razaoSocial}'),
-                pw.Text('Nome da peça: ${ordemServico.cliente!.cnpj}'),
-                pw.Text('Valor: R\$ ${ordemServico.descricao}'),
-              ],
+              ),
             ),
-          )),
-        );
-      },
-    ));
+            pw.Divider(thickness: 0.05),
+            pw.Container(
+              width: double.infinity,
+              color: PdfColor.fromHex('#f2f2f2'),
+              child: pw.Padding(
+                padding: const pw.EdgeInsets.all(10),
+                child: pw.Column(
+                  mainAxisSize: pw.MainAxisSize.min,
+                  crossAxisAlignment: pw.CrossAxisAlignment.start,
+                  children: [
+                    pw.Text('DADOS DO EQUIPAMENTO',
+                        style: pw.TextStyle(
+                            fontSize: 21, fontWeight: pw.FontWeight.bold)),
+                    pw.Text('EQUIPAMENTO: ${ordemServico.equipamento}',
+                        style: const pw.TextStyle(fontSize: 15)),
+                    pw.Text('MARCA: ${ordemServico.marca}',
+                        style: const pw.TextStyle(fontSize: 15)),
+                    pw.Text('MODELO: ${ordemServico.modelo}',
+                        style: const pw.TextStyle(fontSize: 15)),
+                    pw.Text('NS: ${ordemServico.ns}',
+                        style: const pw.TextStyle(fontSize: 15)),
+                  ],
+                ),
+              ),
+            ),
+            pw.Divider(thickness: 0.05),
+            pw.Container(
+              width: double.infinity,
+              color: PdfColor.fromHex('#f2f2f2'),
+              child: pw.Padding(
+                padding: const pw.EdgeInsets.all(10),
+                child: pw.Column(
+                  mainAxisSize: pw.MainAxisSize.min,
+                  crossAxisAlignment: pw.CrossAxisAlignment.start,
+                  children: [
+                    pw.Text('RESUMO DO ATENDIMENTO',
+                        style: pw.TextStyle(
+                            fontSize: 21, fontWeight: pw.FontWeight.bold)),
+                    pw.Text('TIPO ATENDIMENTO: CORRETIVO',
+                        style: const pw.TextStyle(fontSize: 15)),
+                    pw.Text('DATA ATENDIMENTO: 03/01/2024 ',
+                        style: const pw.TextStyle(fontSize: 15)),
+                    pw.Text('HORA INICIO: 16:00',
+                        style: const pw.TextStyle(fontSize: 15)),
+                    pw.Text('HORA FINAL: 17:00',
+                        style: const pw.TextStyle(fontSize: 15)),
+                    pw.Text('DESCRIÇÃO: Realizada corretiva em módulo de ECG. Testado e liberado para uso.',
+                        style: const pw.TextStyle(fontSize: 15)),
+                  ],
+                ),
+              ),
+            ),
+          ];
+        },
+      ),
+    );
     writeCounter(await doc.save());
   }
-
-  @override
-  Widget build(BuildContext context) {
-    // TODO: implement build
-    return Scaffold(
-      appBar: AppBar(),
-    );
-  }
-
-  // pw.Widget _headerContent(pw.Context context) {
-  //   return pw.Container(
-  //     height: 200,
-  //     color: PdfColors.blue300,
-  //     child: pw.Column(
-  //       children: [
-  //         pw.Image(logo),
-  //       ],
-  //     ),
-  //   );
-  // }
-
-  // final logo = pw.MemoryImage(
-  //   File('assets/logo.png').readAsBytesSync(),
-  // );
-
-  //body
-  // List<pw.Widget> _buildContent(pw.Context context) {
-  //   return [
-  //     pw.Padding(
-  //       padding: const pw.EdgeInsets.only(top: 30, left: 25, right: 25),
-  //       child: (pw.Column(
-  //         children: [
-  //           pw.Text('Nome do cliente: ${ordemServico.cliente!.razaoSocial}'),
-  //           pw.Text('Nome da peça: ${ordemServico.cliente!.cnpj}'),
-  //           pw.Text('Valor: R\$ ${ordemServico.descricao}'),
-  //         ],
-  //       )),
-  //     ),
-  //   ];
-  // }
 }
