@@ -8,6 +8,7 @@ import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:anim_search_bar/anim_search_bar.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:servicecontrolapp/page_viwer_pdf.dart';
+import 'package:servicecontrolapp/view/page_ordem_servico/components/widget_text_form_equip.dart';
 import 'package:servicecontrolapp/view/page_ordem_servico/page_search_client.dart';
 import 'package:signature/signature.dart';
 
@@ -153,90 +154,46 @@ class _PageOrdemDeServicoState extends State<PageOrdemDeServico> {
                     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17),
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8.0),
-                  child: TextFormField(
+                WidgetTextFormEquip(
+                    equipamentoNomeController: equipamentoNomeController,
+                    hintText: 'Nome do Equipamento',
+                    label: 'Nome do equipamento',
                     validator: (input) {
                       if (input == null || input.isEmpty) {
                         return 'Digite o nome do equipamento';
                       }
                       return null;
-                    },
-                    controller: equipamentoNomeController,
-                    decoration: InputDecoration(
-                        enabledBorder: const OutlineInputBorder(
-                            borderSide:
-                                BorderSide(color: Colors.black, width: 1)),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        label: const Text('Nome do Equipamento'),
-                        hintText: 'Nome do Equipamento'),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8.0),
-                  child: TextFormField(
+                    }),
+                WidgetTextFormEquip(
+                    equipamentoNomeController: marcaNomeController,
+                    hintText: 'Marca do Equipamento',
+                    label: 'Marca do equipamento',
                     validator: (input) {
                       if (input == null || input.isEmpty) {
                         return 'Digite a marca do equipamento';
                       }
                       return null;
-                    },
-                    controller: marcaNomeController,
-                    decoration: InputDecoration(
-                        enabledBorder: const OutlineInputBorder(
-                            borderSide:
-                                BorderSide(color: Colors.black, width: 1)),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        label: const Text('Marca do Equipamento'),
-                        hintText: 'Marca do Equipamento'),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8.0),
-                  child: TextFormField(
+                    }),
+                WidgetTextFormEquip(
+                    equipamentoNomeController: modeloNomeController,
+                    hintText: 'Modelo do Equipamento',
+                    label: 'Modelo do equipamento',
                     validator: (input) {
                       if (input == null || input.isEmpty) {
-                        return 'Digite o modelo do equipamento';
+                        return 'Digite a modelo do equipamento';
                       }
                       return null;
-                    },
-                    controller: modeloNomeController,
-                    decoration: InputDecoration(
-                        enabledBorder: const OutlineInputBorder(
-                            borderSide:
-                                BorderSide(color: Colors.black, width: 1)),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        label: const Text('Modelo do Equipamento'),
-                        hintText: 'Modelo do Equipamento'),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8.0),
-                  child: TextFormField(
+                    }),
+                WidgetTextFormEquip(
+                    equipamentoNomeController: modeloNomeController,
+                    hintText: 'Número de série do equipamento',
+                    label: 'Número de série do equipamento',
                     validator: (input) {
                       if (input == null || input.isEmpty) {
-                        return 'Digite o numero de série do equipamento';
+                        return 'Digite o número de série do equipamento';
                       }
                       return null;
-                    },
-                    controller: numerSerieController,
-                    decoration: InputDecoration(
-                        enabledBorder: const OutlineInputBorder(
-                            borderSide:
-                                BorderSide(color: Colors.black, width: 1)),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        label: const Text('Número de série do Equipamento'),
-                        hintText: 'Número de série do Equipamento'),
-                  ),
-                ),
+                    }),
                 const Divider(),
                 const Center(
                   child: Text(
@@ -244,28 +201,17 @@ class _PageOrdemDeServicoState extends State<PageOrdemDeServico> {
                     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17),
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8.0),
-                  child: TextFormField(
+                WidgetTextFormEquip(
+                    isMaxLine: true,
+                    equipamentoNomeController: resumoAtendimentoController,
+                    hintText: 'Resumo do atendimento',
+                    label: 'Resumo do atendimento',
                     validator: (input) {
                       if (input == null || input.isEmpty) {
                         return 'Digite a descrição do atendimento';
                       }
                       return null;
-                    },
-                    maxLines: 15,
-                    controller: resumoAtendimentoController,
-                    decoration: InputDecoration(
-                        enabledBorder: const OutlineInputBorder(
-                            borderSide:
-                                BorderSide(color: Colors.black, width: 1)),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        label: const Text('Resumo do atendimento'),
-                        hintText: 'Resumo do atendimento'),
-                  ),
-                ),
+                    }),
                 const Divider(),
                 const Center(
                   child: Text(
@@ -317,17 +263,6 @@ class _PageOrdemDeServicoState extends State<PageOrdemDeServico> {
                         child: const Text('Limpar')),
                   ],
                 ),
-                // Padding(
-                //   padding: const EdgeInsets.symmetric(vertical: 8.0),
-                //   child: Container(
-                //     color: Colors.grey,
-                //     width: double.infinity,
-                //     height: 200,
-                //     child: fileContent == null
-                //         ? const Center(child: Text('Sem assinatura salva'))
-                //         : Image.memory(fileContent!),
-                //   ),
-                // )
               ],
             ),
           ),
@@ -337,75 +272,75 @@ class _PageOrdemDeServicoState extends State<PageOrdemDeServico> {
         padding: const EdgeInsets.all(15.0),
         child: ElevatedButton(
           onPressed: () async {
-            // if (widget.clienteSelecionado == null) {
-            //   setState(() {
-            //     controleCampoCliente = true;
-            //   });
-            // } else {
-            //   setState(() {
-            //     controleCampoCliente = false;
-            //   });
-            // }
-            // if (controller.isEmpty) {
-            //   setState(() {
-            //     controleCampoAssinatura = true;
-            //   });
-            // } else {
-            //   setState(() {
-            //     controleCampoAssinatura = false;
-            //   });
-            // }
-            // if (_formKey.currentState!.validate() &&
-            //     controleCampoAssinatura == false &&
-            //     controleCampoCliente == false &&
-            //     controller.isNotEmpty) {
-            //   print('passou tudo ok');
-            //   OrdemServicoModel ordemServicoModel = OrdemServicoModel(
-            //     cliente: widget.clienteSelecionado!,
-            //     descricao: resumoAtendimentoController.text,
-            //     equipamento: equipamentoNomeController.text,
-            //     marca: marcaNomeController.text,
-            //     modelo: modeloNomeController.text,
-            //     ns: numerSerieController.text,
-            //     assinatura: fileContent!,
-            //   );
+            if (widget.clienteSelecionado == null) {
+              setState(() {
+                controleCampoCliente = true;
+              });
+            } else {
+              setState(() {
+                controleCampoCliente = false;
+              });
+            }
+            if (controller.isEmpty) {
+              setState(() {
+                controleCampoAssinatura = true;
+              });
+            } else {
+              setState(() {
+                controleCampoAssinatura = false;
+              });
+            }
+            if (_formKey.currentState!.validate() &&
+                controleCampoAssinatura == false &&
+                controleCampoCliente == false &&
+                controller.isNotEmpty) {
+              print('passou tudo ok');
+              OrdemServicoModel ordemServicoModel = OrdemServicoModel(
+                cliente: widget.clienteSelecionado!,
+                descricao: resumoAtendimentoController.text,
+                equipamento: equipamentoNomeController.text,
+                marca: marcaNomeController.text,
+                modelo: modeloNomeController.text,
+                ns: numerSerieController.text,
+                assinatura: fileContent!,
+              );
 
-            //   GeneratePdf generatePdf =
-            //       GeneratePdf(ordemServico: ordemServicoModel);
-            //   generatePdf.generatePdf();
-            //   File file = await localFile();
-            //   Navigator.push(
-            //       context,
-            //       MaterialPageRoute(
-            //         builder: (context) => ViwerPdf(
-            //           path: file.path,
-            //         ),
-            //       ));
-            // }
+              GeneratePdf generatePdf = GeneratePdf(
+                  assinatura: fileContent!, ordemServico: ordemServicoModel);
+              generatePdf.generatePdf();
+              File file = await localFile();
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ViwerPdf(
+                      path: file.path,
+                    ),
+                  ));
+            }
 
             // ---------------------- TESTE ----------------------
-            OrdemServicoModel ordemServicoModel = OrdemServicoModel(
-              cliente: widget.clienteSelecionado!,
-              descricao:
-                  'Atendimento referente a troca de módulo. Testado e liberado para uso',
-              equipamento: 'Monitor Multiparametro',
-              marca: 'Medrad',
-              modelo: 'Veris 8600',
-              ns: '08452',
-              // assinatura: fileContent!,
-            );
+            // OrdemServicoModel ordemServicoModel = OrdemServicoModel(
+            //   cliente: widget.clienteSelecionado!,
+            //   descricao:
+            //       'Atendimento referente a troca de módulo. Testado e liberado para uso',
+            //   equipamento: 'Monitor Multiparametro',
+            //   marca: 'Medrad',
+            //   modelo: 'Veris 8600',
+            //   ns: '08452',
+            //   assinatura: fileContent!,
+            // );
 
-            GeneratePdf generatePdf =
-                GeneratePdf(ordemServico: ordemServicoModel);
-            generatePdf.generatePdf();
-            File file = await localFile();
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => ViwerPdf(
-                    path: file.path,
-                  ),
-                ));
+            // GeneratePdf generatePdf = GeneratePdf(
+            //     assinatura: fileContent!, ordemServico: ordemServicoModel);
+            // generatePdf.generatePdf();
+            // File file = await localFile();
+            // Navigator.push(
+            //     context,
+            //     MaterialPageRoute(
+            //       builder: (context) => ViwerPdf(
+            //         path: file.path,
+            //       ),
+            //     ));
             // ---------------------- TESTE ----------------------
           },
           child: const Text('Gerar pdf'),

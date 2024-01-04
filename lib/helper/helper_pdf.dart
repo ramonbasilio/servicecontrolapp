@@ -11,7 +11,8 @@ import 'package:pdf/widgets.dart' as pw;
 
 class GeneratePdf {
   OrdemServicoModel ordemServico;
-  GeneratePdf({required this.ordemServico});
+  Uint8List? assinatura;
+  GeneratePdf({this.assinatura, required this.ordemServico});
 
   Future<String> get localPath async {
     final directory = await getApplicationDocumentsDirectory();
@@ -35,14 +36,18 @@ class GeneratePdf {
       (await rootBundle.load('assets/logo.png')).buffer.asUint8List(),
     );
 
+    final sign = pw.MemoryImage(assinatura!);
+
     pw.Document doc = pw.Document();
     doc.addPage(
       pw.MultiPage(
         header: (pw.Context context) {
           return pw.Container(
+              decoration: pw.BoxDecoration(
+                  border: pw.Border.all(),
+                  borderRadius: pw.BorderRadius.circular(5)),
               height: 100,
               width: double.infinity,
-              color: PdfColor.fromHex('#f2f2f2'),
               child: pw.Padding(
                 padding: const pw.EdgeInsets.all(10),
                 child: pw.Column(
@@ -59,10 +64,12 @@ class GeneratePdf {
         pageFormat: PdfPageFormat.a4,
         build: (pw.Context context) {
           return <pw.Widget>[
-            pw.Divider(thickness: 0.09),
+            _dotWidget(context),
             pw.Container(
               width: double.infinity,
-              color: PdfColor.fromHex('#f2f2f2'),
+              decoration: pw.BoxDecoration(
+                  border: pw.Border.all(),
+                  borderRadius: pw.BorderRadius.circular(5)),
               child: pw.Padding(
                 padding: const pw.EdgeInsets.all(10),
                 child: pw.Column(
@@ -84,10 +91,12 @@ class GeneratePdf {
                 ),
               ),
             ),
-            pw.Divider(thickness: 0.05),
+            _dotWidget(context),
             pw.Container(
               width: double.infinity,
-              color: PdfColor.fromHex('#f2f2f2'),
+              decoration: pw.BoxDecoration(
+                  border: pw.Border.all(),
+                  borderRadius: pw.BorderRadius.circular(5)),
               child: pw.Padding(
                 padding: const pw.EdgeInsets.all(10),
                 child: pw.Column(
@@ -109,10 +118,12 @@ class GeneratePdf {
                 ),
               ),
             ),
-            pw.Divider(thickness: 0.05),
+            _dotWidget(context),
             pw.Container(
               width: double.infinity,
-              color: PdfColor.fromHex('#f2f2f2'),
+              decoration: pw.BoxDecoration(
+                  border: pw.Border.all(),
+                  borderRadius: pw.BorderRadius.circular(5)),
               child: pw.Padding(
                 padding: const pw.EdgeInsets.all(10),
                 child: pw.Column(
@@ -130,10 +141,49 @@ class GeneratePdf {
                         style: const pw.TextStyle(fontSize: 15)),
                     pw.Text('HORA FINAL: 17:00',
                         style: const pw.TextStyle(fontSize: 15)),
-                    pw.Text('DESCRIÇÃO: Realizada corretiva em módulo de ECG. Testado e liberado para uso.',
+                    pw.Text(
+                        'DESCRIÇÃO: Realizada corretiva em módulo de ECG. Testado e liberado para uso.',
                         style: const pw.TextStyle(fontSize: 15)),
                   ],
                 ),
+              ),
+            ),
+            _dotWidget(context),
+            pw.Container(
+              decoration: pw.BoxDecoration(
+                  border: pw.Border.all(),
+                  borderRadius: pw.BorderRadius.circular(5)),
+              height: 150,
+              width: double.infinity,
+              child: pw.Column(
+                mainAxisAlignment: pw.MainAxisAlignment.spaceAround,
+                children: [
+                  pw.Text('ASSINATURAS',
+                      style: pw.TextStyle(
+                          fontSize: 21, fontWeight: pw.FontWeight.bold)),
+                  pw.Row(
+                    mainAxisAlignment: pw.MainAxisAlignment.spaceAround,
+                    children: [
+                      pw.Column(
+                        mainAxisAlignment: pw.MainAxisAlignment.center,
+                        children: [
+                          pw.Image(sign, height: 50, width: 90),
+                          pw.SizedBox(width: 90, child: pw.Divider()),
+                          pw.Text('Tecnico: Ramon Basilio'),
+                        ],
+                      ),
+                      pw.Column(
+                        mainAxisAlignment: pw.MainAxisAlignment.center,
+                        children: [
+                          pw.Image(sign, height: 50, width: 90),
+                          pw.SizedBox(width: 90, child: pw.Divider()),
+                          pw.Text('Cliente: Ramon Basilio'),
+                        ],
+                      ),
+                    ],
+                  ),
+                  pw.Text('ENVIADO PARA O EMAIL: ramon.s.basilio@gmail.com'),
+                ],
               ),
             ),
           ];
@@ -141,5 +191,22 @@ class GeneratePdf {
       ),
     );
     writeCounter(await doc.save());
+  }
+
+  pw.Center _dotWidget(pw.Context context) {
+    return pw.Center(
+      child: pw.Padding(
+        padding: const pw.EdgeInsets.all(5),
+        child: pw.Container(
+          alignment: pw.Alignment.center,
+          height: 10,
+          width: 10,
+          decoration: const pw.BoxDecoration(
+            shape: pw.BoxShape.circle,
+            color: PdfColors.black,
+          ),
+        ),
+      ),
+    );
   }
 }

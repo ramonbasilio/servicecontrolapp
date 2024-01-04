@@ -27,6 +27,7 @@ class _ViwerPdfState extends State<ViwerPdf> {
     return File('$path/exemplo.pdf');
   }
 
+
   final Completer<PDFViewController> _controller =
       Completer<PDFViewController>();
   int? pages = 0;

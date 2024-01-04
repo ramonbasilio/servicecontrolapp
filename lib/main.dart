@@ -38,6 +38,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Service Control 1.0',
       theme: ThemeData(
+        useMaterial3: false,
         primarySwatch: Colors.grey,
       ),
       home: const PageInicial(),
