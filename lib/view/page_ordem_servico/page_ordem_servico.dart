@@ -3,13 +3,11 @@
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
-import 'package:anim_search_bar/anim_search_bar.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:servicecontrolapp/page_viwer_pdf.dart';
 import 'package:servicecontrolapp/view/page_ordem_servico/components/widget_text_form_equip.dart';
 import 'package:servicecontrolapp/view/page_ordem_servico/page_search_client.dart';
+import 'package:servicecontrolapp/widgets/widget_menu_type_service.dart';
 import 'package:signature/signature.dart';
 
 import '../../helper/helper_pdf.dart';
@@ -38,6 +36,7 @@ class _PageOrdemDeServicoState extends State<PageOrdemDeServico> {
   final _formKey = GlobalKey<FormState>();
   bool controleCampoCliente = false;
   bool controleCampoAssinatura = false;
+  String? tipoAtendimento;
 
   @override
   void dispose() {
@@ -194,6 +193,18 @@ class _PageOrdemDeServicoState extends State<PageOrdemDeServico> {
                       }
                       return null;
                     }),
+                WidgetMenuTypeService(
+                  returnDropDownValue: (value) {
+                    tipoAtendimento = value;
+                    print("tipo de atendimento: $tipoAtendimento");
+                  },
+                  validator: (input) {
+                    if (input == null || input.isEmpty) {
+                      return 'Selecione o tipo de atendimento';
+                    }
+                    return null;
+                  },
+                ),
                 const Divider(),
                 const Center(
                   child: Text(

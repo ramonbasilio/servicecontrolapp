@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:servicecontrolapp/controller/Firebase/firebase_service.dart';
 import '../model/model_os.dart';
 import '../model/model_test.dart';
 import 'package:pdf/pdf.dart';
@@ -15,9 +16,8 @@ class GeneratePdf {
   GeneratePdf({this.assinatura, required this.ordemServico});
 
   Future<String> get localPath async {
-    final directory = await getApplicationDocumentsDirectory();
-
-    return directory.path;
+    final directory = await getExternalStorageDirectory();
+    return directory!.path;
   }
 
   Future<File> get localFile async {
@@ -190,8 +190,26 @@ class GeneratePdf {
         },
       ),
     );
-    writeCounter(await doc.save());
+    final pdf = await doc.save();
+    writeCounter(pdf);
+    // final file = File('assets/exemplo.pdf');
+    // await file.writeAsBytes(pdf);
   }
+
+  // void savaPdf(ByteData data) async {
+  //   Directory documentsDirectory = await getApplicationDocumentsDirectory();
+  //   String projetoPath = '${documentsDirectory.path}/pdf_temporario';
+  //   String filePath = '$projetoPath/exemplo.pdf';
+  //   if (!await Directory(projetoPath).exists()) {
+  //     await Directory(projetoPath).create(recursive: true);
+  //   }
+  //   try {
+  //     final file = File(filePath);
+  //     await file.writeAsBytes(data.buffer.asUint8List());
+  //   } catch (e) {
+  //     print("erro ao salvar pdf: $e");
+  //   }
+  // }
 
   pw.Center _dotWidget(pw.Context context) {
     return pw.Center(
