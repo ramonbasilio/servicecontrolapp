@@ -3,7 +3,9 @@
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:servicecontrolapp/extensions/time.dart';
 import 'package:servicecontrolapp/page_viwer_pdf.dart';
 import 'package:servicecontrolapp/view/page_ordem_servico/components/widget_text_form_equip.dart';
 import 'package:servicecontrolapp/view/page_ordem_servico/page_search_client.dart';
@@ -30,6 +32,15 @@ class _PageOrdemDeServicoState extends State<PageOrdemDeServico> {
   TextEditingController modeloNomeController = TextEditingController();
   TextEditingController numerSerieController = TextEditingController();
   TextEditingController resumoAtendimentoController = TextEditingController();
+  TextEditingController dataAtendimentoController = TextEditingController();
+  TextEditingController horaInicioAtendimentoController =
+      TextEditingController();
+  TextEditingController horaFinalAtendimentoController =
+      TextEditingController();
+  TextEditingController emailController = TextEditingController();
+
+  TextEditingController nomeController = TextEditingController();
+
   SignatureController controller =
       SignatureController(penStrokeWidth: 2, penColor: Colors.black);
   Uint8List? fileContent;
@@ -50,13 +61,13 @@ class _PageOrdemDeServicoState extends State<PageOrdemDeServico> {
   }
 
   Future<String> localPath() async {
-    final directory = await getApplicationDocumentsDirectory();
+    final directory = await getApplicationSupportDirectory();
     return directory.path;
   }
 
   Future<File> localFile() async {
     final path = await localPath();
-    return File('$path/exemplo.pdf');
+    return File('$path/exemploOrdemDeServico.pdf');
   }
 
   Future<String> getFilePath() async {
@@ -146,6 +157,26 @@ class _PageOrdemDeServicoState extends State<PageOrdemDeServico> {
                           ),
                   ),
                 ),
+                WidgetTextFormEquip(
+                    equipamentoNomeController: nomeController,
+                    hintText: 'Nome do cliente',
+                    label: 'Nome do cliente',
+                    validator: (input) {
+                      if (input == null || input.isEmpty) {
+                        return 'Digite o nome do cliente';
+                      }
+                      return null;
+                    }),
+                WidgetTextFormEquip(
+                    equipamentoNomeController: emailController,
+                    hintText: 'Email do cliente',
+                    label: 'Email do cliente',
+                    validator: (input) {
+                      if (input == null || input.isEmpty) {
+                        return 'Digite o email do cliente';
+                      }
+                      return null;
+                    }),
                 const Divider(),
                 const Center(
                   child: Text(
@@ -184,7 +215,7 @@ class _PageOrdemDeServicoState extends State<PageOrdemDeServico> {
                       return null;
                     }),
                 WidgetTextFormEquip(
-                    equipamentoNomeController: modeloNomeController,
+                    equipamentoNomeController: numerSerieController,
                     hintText: 'Número de série do equipamento',
                     label: 'Número de série do equipamento',
                     validator: (input) {
@@ -223,7 +254,131 @@ class _PageOrdemDeServicoState extends State<PageOrdemDeServico> {
                       }
                       return null;
                     }),
-                const Divider(),
+                //--------------------------------------------------------------------------------------//
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 8.0),
+                  child: TextFormField(
+                    validator: (input) {
+                      if (input == null || input.isEmpty) {
+                        return 'Selecione a data do atendimento';
+                      }
+                      return null;
+                    },
+                    readOnly: true,
+                    controller: dataAtendimentoController,
+                    decoration: InputDecoration(
+                        enabledBorder: const OutlineInputBorder(
+                            borderSide:
+                                BorderSide(color: Colors.black, width: 1)),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        label: const Text('Data do atendimento'),
+                        hintText: 'Data do atendimento'),
+                    onTap: () async {
+                      DateTime? pickedDate = await showDatePicker(
+                          context: context,
+                          initialDate: DateTime.now(),
+                          firstDate: DateTime(2000),
+                          lastDate: DateTime(2101));
+
+                      if (pickedDate != null) {
+                        String formattedDate =
+                            DateFormat('dd/MM/yyyy').format(pickedDate);
+                        setState(() {
+                          dataAtendimentoController.text = formattedDate;
+                        });
+                      }
+                    },
+                  ),
+                ),
+                //--------------------------------------------------------------------------------------//
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 8.0),
+                  child: TextFormField(
+                    validator: (input) {
+                      if (input == null || input.isEmpty) {
+                        return 'Selecione a hora de inicio do atendimento';
+                      }
+                      return null;
+                    },
+                    readOnly: true,
+                    controller: horaInicioAtendimentoController,
+                    decoration: InputDecoration(
+                        enabledBorder: const OutlineInputBorder(
+                            borderSide:
+                                BorderSide(color: Colors.black, width: 1)),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        label: const Text('Hora início do atendimento'),
+                        hintText: 'Hora início do atendimento'),
+                    onTap: () async {
+                      final TimeOfDay? horaAtual = await showTimePicker(
+                        builder: (context, child) {
+                          return MediaQuery(
+                              data: MediaQuery.of(context)
+                                  .copyWith(alwaysUse24HourFormat: true),
+                              child: child ?? Container());
+                        },
+                        context: context,
+                        initialTime: TimeOfDay.now(),
+                      );
+                      if (horaAtual != null) {
+                        setState(
+                          () {
+                            horaInicioAtendimentoController.text =
+                                horaAtual.to24hours();
+                          },
+                        );
+                      }
+                    },
+                  ),
+                ),
+                //--------------------------------------------------------------------------------------//
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 8.0),
+                  child: TextFormField(
+                    validator: (input) {
+                      if (input == null || input.isEmpty) {
+                        return 'Selecione a hora final do atendimento';
+                      }
+                      return null;
+                    },
+                    readOnly: true,
+                    controller: horaFinalAtendimentoController,
+                    decoration: InputDecoration(
+                        enabledBorder: const OutlineInputBorder(
+                            borderSide:
+                                BorderSide(color: Colors.black, width: 1)),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        label: const Text('Hora final do atendimento'),
+                        hintText: 'Hora final do atendimento'),
+                    onTap: () async {
+                      final TimeOfDay? horaAtual = await showTimePicker(
+                        builder: (context, child) {
+                          return MediaQuery(
+                              data: MediaQuery.of(context)
+                                  .copyWith(alwaysUse24HourFormat: true),
+                              child: child ?? Container());
+                        },
+                        context: context,
+                        initialTime: TimeOfDay.now(),
+                      );
+                      if (horaAtual != null) {
+                        setState(
+                          () {
+                            horaFinalAtendimentoController.text =
+                                horaAtual.to24hours();
+                          },
+                        );
+                      }
+                    },
+                  ),
+                ),
+                //--------------------------------------------------------------------------------------//
                 const Center(
                   child: Text(
                     'ASSINATURA CLIENTE',
@@ -308,14 +463,19 @@ class _PageOrdemDeServicoState extends State<PageOrdemDeServico> {
               print('passou tudo ok');
               OrdemServicoModel ordemServicoModel = OrdemServicoModel(
                 cliente: widget.clienteSelecionado!,
-                descricao: resumoAtendimentoController.text,
+                nomeCliente: nomeController.text,
+                emailCliente: emailController.text,
                 equipamento: equipamentoNomeController.text,
                 marca: marcaNomeController.text,
                 modelo: modeloNomeController.text,
                 ns: numerSerieController.text,
+                tipoAtendimento: tipoAtendimento!,
+                resumoAtendimento: resumoAtendimentoController.text,
+                dataAtendimento: dataAtendimentoController.text,
+                horaInicioAtendimento: horaInicioAtendimentoController.text,
+                horaFinalAtendimento: horaFinalAtendimentoController.text,
                 assinatura: fileContent!,
               );
-
               GeneratePdf generatePdf = GeneratePdf(
                   assinatura: fileContent!, ordemServico: ordemServicoModel);
               generatePdf.generatePdf();

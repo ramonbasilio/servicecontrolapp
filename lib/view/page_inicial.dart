@@ -18,32 +18,34 @@ class PageInicial extends StatelessWidget {
             child: Text('Service Control 1.0'),
           ),
         ),
-        body: Column(
-          children: [
-            SizedBox(
-                height: 500,
-                child: GridView.count(crossAxisCount: 2, children: [
-                  WidgetCardPageInicial(
-                    nome: 'Clientes',
-                    rota: const PageClient(),
-                  ),
-                  WidgetCardPageInicial(
-                    nome: 'Ordem de Serviço',
-                    rota: PageOrdemDeServico(),
-                  ),
-                  WidgetCardPageInicial(
-                    nome: 'Inventário',
-                  ),
-                  WidgetCardPageInicial(
-                    nome: 'Historico',
-                  )
-                ])),
-            ElevatedButton(
-                onPressed: () async {
-                  // await Http().callCloudFunc();
-                },
-                child: Text('Teste Email'))
-          ],
+        body: SingleChildScrollView(
+          child: Column(
+            children: [
+              SizedBox(
+                  height: 500,
+                  child: GridView.count(crossAxisCount: 2, children: [
+                    WidgetCardPageInicial(
+                      nome: 'Clientes',
+                      rota: const PageClient(),
+                    ),
+                    WidgetCardPageInicial(
+                      nome: 'Ordem de Serviço',
+                      rota: PageOrdemDeServico(),
+                    ),
+                    WidgetCardPageInicial(
+                      nome: 'Inventário',
+                    ),
+                    WidgetCardPageInicial(
+                      nome: 'Historico',
+                    )
+                  ])),
+              ElevatedButton(
+                  onPressed: () async {
+                    // await Http().callCloudFunc();
+                  },
+                  child: Text('Teste Email'))
+            ],
+          ),
         ));
   }
 }

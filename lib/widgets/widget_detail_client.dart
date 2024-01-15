@@ -1,8 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
-
-import '../controller/Repository/repository_client.dart';
 import '../model/model_client.dart';
 import '../view/alerts/confirmation_dialog.dart';
 

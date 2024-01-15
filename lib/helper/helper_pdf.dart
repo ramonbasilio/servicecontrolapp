@@ -22,7 +22,7 @@ class GeneratePdf {
 
   Future<File> get localFile async {
     final path = await localPath;
-    return File('$path/exemplo.pdf');
+    return File('$path/exemploOrdemDeServico.pdf');
   }
 
   Future<File> writeCounter(Uint8List pdf) async {
@@ -133,16 +133,17 @@ class GeneratePdf {
                     pw.Text('RESUMO DO ATENDIMENTO',
                         style: pw.TextStyle(
                             fontSize: 21, fontWeight: pw.FontWeight.bold)),
-                    pw.Text('TIPO ATENDIMENTO: CORRETIVO',
-                        style: const pw.TextStyle(fontSize: 15)),
-                    pw.Text('DATA ATENDIMENTO: 03/01/2024 ',
-                        style: const pw.TextStyle(fontSize: 15)),
-                    pw.Text('HORA INICIO: 16:00',
-                        style: const pw.TextStyle(fontSize: 15)),
-                    pw.Text('HORA FINAL: 17:00',
+                    pw.Text('TIPO ATENDIMENTO: ${ordemServico.tipoAtendimento}',
                         style: const pw.TextStyle(fontSize: 15)),
                     pw.Text(
-                        'DESCRIÇÃO: Realizada corretiva em módulo de ECG. Testado e liberado para uso.',
+                        'DATA ATENDIMENTO: ${ordemServico.dataAtendimento} ',
+                        style: const pw.TextStyle(fontSize: 15)),
+                    pw.Text(
+                        'HORA INICIO: ${ordemServico.horaInicioAtendimento}',
+                        style: const pw.TextStyle(fontSize: 15)),
+                    pw.Text('HORA FINAL: ${ordemServico.horaFinalAtendimento}',
+                        style: const pw.TextStyle(fontSize: 15)),
+                    pw.Text('DESCRIÇÃO: ${ordemServico.resumoAtendimento}',
                         style: const pw.TextStyle(fontSize: 15)),
                   ],
                 ),
@@ -177,12 +178,12 @@ class GeneratePdf {
                         children: [
                           pw.Image(sign, height: 50, width: 90),
                           pw.SizedBox(width: 90, child: pw.Divider()),
-                          pw.Text('Cliente: Ramon Basilio'),
+                          pw.Text('Cliente: ${ordemServico.nomeCliente}'),
                         ],
                       ),
                     ],
                   ),
-                  pw.Text('ENVIADO PARA O EMAIL: ramon.s.basilio@gmail.com'),
+                  pw.Text('ENVIADO PARA O EMAIL: ${ordemServico.emailCliente}'),
                 ],
               ),
             ),
