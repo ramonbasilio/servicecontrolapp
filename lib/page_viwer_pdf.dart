@@ -8,8 +8,10 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:flutter_pdfview/flutter_pdfview.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:provider/provider.dart';
 import 'package:servicecontrolapp/controller/Firebase/firebase_service.dart';
 import 'package:servicecontrolapp/helper/http_helper.dart';
+import 'package:servicecontrolapp/provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
 
 class ViwerPdf extends StatefulWidget {
@@ -23,7 +25,7 @@ class ViwerPdf extends StatefulWidget {
 class _ViwerPdfState extends State<ViwerPdf> {
   Future<String> localPath() async {
     final directory = await getApplicationSupportDirectory();
-    return directory!.path;
+    return directory.path;
   }
 
   Future<File> localFile() async {
@@ -31,6 +33,7 @@ class _ViwerPdfState extends State<ViwerPdf> {
     return File('$path/exemploOrdemDeServico.pdf');
   }
 
+  String email = '';
   final Completer<PDFViewController> _controller =
       Completer<PDFViewController>();
   int? pages = 0;
@@ -47,7 +50,14 @@ class _ViwerPdfState extends State<ViwerPdf> {
                 File file = await localFile();
                 Uint8List pdfbytes = await file.readAsBytes();
                 String base64pdf = base64Encode(pdfbytes);
-                await Http().callCloudFunc(base64pdf);
+                // ignore: use_build_context_synchronously
+                email = Provider.of<ProviderPdf>(context, listen: false)
+                    .emailClient;
+                print('email do cliente: $email');
+                await Http().callCloudFunc(
+                  base64pdf,
+                  email,
+                );
                 if (kDebugMode) {
                   print('pdf base64: $base64pdf');
                 }

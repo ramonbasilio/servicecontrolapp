@@ -5,8 +5,10 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:provider/provider.dart';
 import 'package:servicecontrolapp/extensions/time.dart';
 import 'package:servicecontrolapp/page_viwer_pdf.dart';
+import 'package:servicecontrolapp/provider/provider.dart';
 import 'package:servicecontrolapp/view/page_ordem_servico/components/widget_text_form_equip.dart';
 import 'package:servicecontrolapp/view/page_ordem_servico/page_search_client.dart';
 import 'package:servicecontrolapp/widgets/widget_menu_type_service.dart';
@@ -476,6 +478,8 @@ class _PageOrdemDeServicoState extends State<PageOrdemDeServico> {
                 horaFinalAtendimento: horaFinalAtendimentoController.text,
                 assinatura: fileContent!,
               );
+              Provider.of<ProviderPdf>(context, listen: false)
+                  .setEmail(emailController.text);
               GeneratePdf generatePdf = GeneratePdf(
                   assinatura: fileContent!, ordemServico: ordemServicoModel);
               generatePdf.generatePdf();
@@ -488,31 +492,6 @@ class _PageOrdemDeServicoState extends State<PageOrdemDeServico> {
                     ),
                   ));
             }
-
-            // ---------------------- TESTE ----------------------
-            // OrdemServicoModel ordemServicoModel = OrdemServicoModel(
-            //   cliente: widget.clienteSelecionado!,
-            //   descricao:
-            //       'Atendimento referente a troca de módulo. Testado e liberado para uso',
-            //   equipamento: 'Monitor Multiparametro',
-            //   marca: 'Medrad',
-            //   modelo: 'Veris 8600',
-            //   ns: '08452',
-            //   assinatura: fileContent!,
-            // );
-
-            // GeneratePdf generatePdf = GeneratePdf(
-            //     assinatura: fileContent!, ordemServico: ordemServicoModel);
-            // generatePdf.generatePdf();
-            // File file = await localFile();
-            // Navigator.push(
-            //     context,
-            //     MaterialPageRoute(
-            //       builder: (context) => ViwerPdf(
-            //         path: file.path,
-            //       ),
-            //     ));
-            // ---------------------- TESTE ----------------------
           },
           child: const Text('Gerar pdf'),
         ),

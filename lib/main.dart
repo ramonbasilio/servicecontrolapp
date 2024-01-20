@@ -24,7 +24,7 @@ void main() async {
     providers: [
       ChangeNotifierProvider<RepositoryClient>(
           create: (context) => RepositoryClient()),
-      Provider<ProviderPdf>(create: (context) => ProviderPdf()),
+      ChangeNotifierProvider<ProviderPdf>(create: (context) => ProviderPdf()),
     ],
     child: const MyApp(),
   ));

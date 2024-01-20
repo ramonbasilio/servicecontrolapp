@@ -16,8 +16,8 @@ class GeneratePdf {
   GeneratePdf({this.assinatura, required this.ordemServico});
 
   Future<String> get localPath async {
-    final directory = await getExternalStorageDirectory();
-    return directory!.path;
+    final directory = await getApplicationSupportDirectory();
+    return directory.path;
   }
 
   Future<File> get localFile async {
@@ -25,7 +25,7 @@ class GeneratePdf {
     return File('$path/exemploOrdemDeServico.pdf');
   }
 
-  Future<File> writeCounter(Uint8List pdf) async {
+  Future<File> savePdf(Uint8List pdf) async {
     final file = await localFile;
     // Write the file
     return file.writeAsBytes(pdf);
@@ -34,6 +34,12 @@ class GeneratePdf {
   generatePdf() async {
     final logo = pw.MemoryImage(
       (await rootBundle.load('assets/logo.png')).buffer.asUint8List(),
+    );
+
+    final assinaturaRamon = pw.MemoryImage(
+      (await rootBundle.load('assets/assinatura_ramon.png'))
+          .buffer
+          .asUint8List(),
     );
 
     final sign = pw.MemoryImage(assinatura!);
@@ -168,7 +174,7 @@ class GeneratePdf {
                       pw.Column(
                         mainAxisAlignment: pw.MainAxisAlignment.center,
                         children: [
-                          pw.Image(sign, height: 50, width: 90),
+                          pw.Image(assinaturaRamon, height: 50, width: 90),
                           pw.SizedBox(width: 90, child: pw.Divider()),
                           pw.Text('Tecnico: Ramon Basilio'),
                         ],
@@ -192,7 +198,7 @@ class GeneratePdf {
       ),
     );
     final pdf = await doc.save();
-    writeCounter(pdf);
+    savePdf(pdf);
     // final file = File('assets/exemplo.pdf');
     // await file.writeAsBytes(pdf);
   }
