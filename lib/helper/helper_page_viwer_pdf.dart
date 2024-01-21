@@ -3,15 +3,12 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:flutter_pdfview/flutter_pdfview.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:servicecontrolapp/controller/Firebase/firebase_service.dart';
-import 'package:servicecontrolapp/helper/http_helper.dart';
-import 'package:servicecontrolapp/provider/provider.dart';
+import 'package:servicecontrolapp/helper/helper_http.dart';
+import 'package:servicecontrolapp/controller/provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
 
 class ViwerPdf extends StatefulWidget {
@@ -61,7 +58,6 @@ class _ViwerPdfState extends State<ViwerPdf> {
                 if (kDebugMode) {
                   print('pdf base64: $base64pdf');
                 }
-                await FirebaseService().savePdfFirestore(pdfbytes);
                 Share.shareXFiles([XFile(file.path)]);
               },
               child: const Text('Share'))

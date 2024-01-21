@@ -7,9 +7,12 @@ import 'package:flutter/material.dart';
 import '../../model/model_client.dart';
 import '../../model/model_os.dart';
 
-class RepositoryClient extends ChangeNotifier {
+class Repository extends ChangeNotifier {
   List<ClienteModel> _listClients = [];
   List<ClienteModel> get listClients => _listClients;
+
+  List<OrdemServicoModel> _listOrdemService = [];
+  List<OrdemServicoModel> get listOrdemService => _listOrdemService;
 
   bool _loading = false;
   bool get loading => _loading;
@@ -41,8 +44,11 @@ class RepositoryClient extends ChangeNotifier {
         cep: cep,
         responsavel: responsaveis);
 
-    String _response = await FirebaseService()
-        .registerFirestore('Clientes', _clienteModel.toMap());
+    String _response = await FirebaseService().registerFirestore(
+      'Clientes',
+      _clienteModel.toMap(),
+      'id',
+    );
 
     final snackBar = SnackBar(
       content: Text(_response),
@@ -50,55 +56,26 @@ class RepositoryClient extends ChangeNotifier {
     ScaffoldMessenger.of(context!).showSnackBar(snackBar);
   }
 
-  // void registerOrdemServico({
-  //   required BuildContext? context,
-  //   required final String id,
-  //   required final String numOrdemServico,
-  //   required final ClienteModel cliente,
-  //   required final String equipamento,
-  //   required final String modelo,
-  //   required final String marca,
-  //   required final String data,
-  //   required final String horaInicial,
-  //   required final String horaFinal,
-  //   required final String descrSimples,
-  //   required final String tipoAtendimento,
-  //   required final String descrCompleta,
-  //   required final String nomeResponsavel,
-  //   required final String assinatura,
-  // }) async {
-  //   String id = const Uuid().v4();
-  //   OrdemServicoModel _ordemDeServicoModel = OrdemServicoModel(
-  //     id: id,
-  //     numOrdemServico: numOrdemServico,
-  //     cliente: cliente,
-  //     equipamento: equipamento,
-  //     modelo: modelo,
-  //     marca: marca,
-  //     data: data,
-  //     horaInicial: horaInicial,
-  //     horaFinal: horaFinal,
-  //     descrSimples: descrSimples,
-  //     tipoAtendimento: tipoAtendimento,
-  //     descrCompleta: descrCompleta,
-  //     nomeResponsavel: nomeResponsavel,
-  //     assinatura: assinatura,
-  //   );
+  void registerOrdemService(
+      {required BuildContext? context,
+      required OrdemServicoModel ordemServicoModel}) async {
+    String _response = await FirebaseService().registerFirestore(
+      'Ordem_de_servico',
+      ordemServicoModel.toMap(),
+      'idOrdemServico',
+    );
 
-  //   String _response = await FirebaseService()
-  //       .registerFirestore('Ordem_de_Servico', _ordemDeServicoModel.toMap());
-
-  //   final snackBar = SnackBar(
-  //     content: Text(_response),
-  //   );
-  //   ScaffoldMessenger.of(context!).showSnackBar(snackBar);
-  // }
+    final snackBar = SnackBar(
+      content: Text(_response),
+    );
+    ScaffoldMessenger.of(context!).showSnackBar(snackBar);
+  }
 
   Future<void> getAllClients() async {
     _loading = true;
     _listClients = [];
     List<Map<String, dynamic>> _resultFirestore =
-        await FirebaseService().getAllClientesFirestore('Clientes');
+        await FirebaseService().getDataFromFirebase('Clientes');
     _resultFirestore.forEach((element) {
       _listClients.add(ClienteModel.fromMap(element));
     });
@@ -106,12 +83,25 @@ class RepositoryClient extends ChangeNotifier {
     notifyListeners();
   }
 
-  loadClients() async {
+  Future<void> getAllOrdemServico() async {
+    _loading = true;
+    _listOrdemService = [];
+    List<Map<String, dynamic>> _resultFirestore =
+        await FirebaseService().getDataFromFirebase('Ordem_de_servico');
+    _resultFirestore.forEach((element) {
+      _listOrdemService.add(OrdemServicoModel.fromMap(element));
+    });
+    _loading = false;
+    notifyListeners();
+  }
+
+  loadFirebase() async {
+    await getAllOrdemServico();
     await getAllClients();
   }
 
-  RepositoryClient repositoryClientProvider(BuildContext context) =>
-      Provider.of<RepositoryClient>(context, listen: false);
+  Repository repositoryClientProvider(BuildContext context) =>
+      Provider.of<Repository>(context, listen: false);
 
   Future<void> deleteClient(String id) async {
     await FirebaseService().deleteClientFirestore('Clientes', id);
@@ -128,13 +118,6 @@ class RepositoryClient extends ChangeNotifier {
               ),
         )
         .toList();
-
-    // print('tamanho: ${_listClients.length}');
-    // _listClients.forEach(
-    //   (element) {
-    //     print('Razao Social: ${element.razaoSocial}');
-    //   },
-    // );
     notifyListeners();
     return _listClients;
   }

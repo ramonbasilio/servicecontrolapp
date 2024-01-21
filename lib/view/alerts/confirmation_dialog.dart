@@ -21,10 +21,10 @@ class ConfirmationDialog {
               ),
               TextButton(
                 onPressed: () {
-                  RepositoryClient().deleteClient(id).then((value) {
-                    RepositoryClient()
+                  Repository().deleteClient(id).then((value) {
+                    Repository()
                         .repositoryClientProvider(context)
-                        .loadClients();
+                        .loadFirebase();
                   }).then((_) {
                     Navigator.of(context, rootNavigator: true).pop();
                   });

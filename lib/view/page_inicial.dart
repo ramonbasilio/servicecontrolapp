@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:servicecontrolapp/helper/http_helper.dart';
+import 'package:servicecontrolapp/helper/helper_http.dart';
+import 'package:servicecontrolapp/view/page_historico_ordem_servico/page_historico_ordem_servico.dart';
 import 'package:servicecontrolapp/view/page_ordem_servico/page_ordem_servico.dart';
 import 'package:servicecontrolapp/view/pages_client/page_client.dart';
 import '../controller/Repository/repository_client.dart';
@@ -10,7 +11,7 @@ class PageInicial extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    RepositoryClient().repositoryClientProvider(context).loadClients();
+    Repository().repositoryClientProvider(context).loadFirebase();
 
     return Scaffold(
         appBar: AppBar(
@@ -33,17 +34,18 @@ class PageInicial extends StatelessWidget {
                       rota: PageOrdemDeServico(),
                     ),
                     WidgetCardPageInicial(
-                      nome: 'Inventário',
+                      nome: 'Historico',
+                      rota: const PageHistoricoOrdemServico(),
                     ),
                     WidgetCardPageInicial(
-                      nome: 'Historico',
-                    )
+                      nome: 'Inventário',
+                    ),
                   ])),
               ElevatedButton(
                   onPressed: () async {
                     // await Http().callCloudFunc();
                   },
-                  child: Text('Teste Email'))
+                  child: const Text('Teste Email'))
             ],
           ),
         ));

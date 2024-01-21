@@ -8,18 +8,16 @@ class FirebaseService {
   final FirebaseFirestore db = FirebaseFirestore.instance;
 
   Future<String> registerFirestore(
-    String collectionPath,
-    Map<String, dynamic> data,
-  ) async {
+      String collectionPath, Map<String, dynamic> data, String document) async {
     try {
-      await db.collection(collectionPath).doc(data['id']).set(data);
+      await db.collection(collectionPath).doc(data[document]).set(data);
       return 'Salvo com sucesso';
     } catch (e) {
       throw 'Falha ao salvar. Erro: $e';
     }
   }
 
-  Future<List<Map<String, dynamic>>> getAllClientesFirestore(
+  Future<List<Map<String, dynamic>>> getDataFromFirebase(
       String collectionPath) async {
     List<Map<String, dynamic>> result = [];
     final QuerySnapshot querySnapshot =
@@ -42,7 +40,10 @@ class FirebaseService {
   Future<void> savePdfFirestore(Uint8List pdf) async {
     String base64Pdf = base64Encode(pdf);
     try {
-      await db.collection('PDFs').doc(DateTime.now().toString()).set({'pdf':base64Pdf});
+      await db
+          .collection('PDFs')
+          .doc(DateTime.now().toString())
+          .set({'pdf': base64Pdf});
       print('Salvo pdf com sucesso');
     } catch (e) {
       print('Falha ao salvar pdf');

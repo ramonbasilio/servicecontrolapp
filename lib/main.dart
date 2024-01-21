@@ -6,7 +6,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:servicecontrolapp/page_teste.dart';
-import 'package:servicecontrolapp/provider/provider.dart';
+import 'package:servicecontrolapp/controller/provider/provider.dart';
 import 'package:servicecontrolapp/view/page_inicial.dart';
 import 'package:servicecontrolapp/view/page_ordem_servico/page_ordem_servico.dart';
 import 'package:servicecontrolapp/view/pages_client/page_client.dart';
@@ -22,8 +22,7 @@ void main() async {
 
   runApp(MultiProvider(
     providers: [
-      ChangeNotifierProvider<RepositoryClient>(
-          create: (context) => RepositoryClient()),
+      ChangeNotifierProvider<Repository>(create: (context) => Repository()),
       ChangeNotifierProvider<ProviderPdf>(create: (context) => ProviderPdf()),
     ],
     child: const MyApp(),

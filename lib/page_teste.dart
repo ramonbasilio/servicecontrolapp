@@ -3,7 +3,7 @@
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
-import 'package:servicecontrolapp/page_viwer_pdf.dart';
+import 'package:servicecontrolapp/helper/helper_page_viwer_pdf.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:signature/signature.dart';
 import 'package:path_provider/path_provider.dart';
@@ -52,7 +52,9 @@ class _PageTesteState extends State<PageTeste> {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => ViwerPdf(path: file.path,),
+                      builder: (context) => ViwerPdf(
+                        path: file.path,
+                      ),
                     ));
 
                 // Share.shareXFiles([XFile(file.path)]);

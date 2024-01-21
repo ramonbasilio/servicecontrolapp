@@ -77,9 +77,9 @@ class _PageRegisterClientState extends State<PageRegisterClient> {
                 Column(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Column(
+                    const Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
-                      children: const [
+                      children: [
                         Text(
                           'DADOS HOSPITAL / CLÍNICA',
                           style: TextStyle(
@@ -259,7 +259,7 @@ class _PageRegisterClientState extends State<PageRegisterClient> {
               if (_formKey.currentState!.validate()) {
                 final BuildContext? _context = MyApp.navKey.currentContext;
                 if (_context != null) {
-                  RepositoryClient().registerClient(
+                  Repository().registerClient(
                     context: _context,
                     cnpj: _cnpjController.text.trim(),
                     razaoSocial: _razaoSocialController.text.trim(),
@@ -277,9 +277,7 @@ class _PageRegisterClientState extends State<PageRegisterClient> {
                     },
                   );
                 }
-                RepositoryClient()
-                    .repositoryClientProvider(context)
-                    .loadClients();
+                Repository().repositoryClientProvider(context).loadFirebase();
                 Navigator.pop(context);
               }
             },

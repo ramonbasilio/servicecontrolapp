@@ -4,16 +4,17 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:servicecontrolapp/controller/Repository/repository_client.dart';
 import 'package:servicecontrolapp/extensions/time.dart';
-import 'package:servicecontrolapp/page_viwer_pdf.dart';
-import 'package:servicecontrolapp/provider/provider.dart';
+import 'package:servicecontrolapp/helper/helper_page_viwer_pdf.dart';
+import 'package:servicecontrolapp/controller/provider/provider.dart';
+import 'package:servicecontrolapp/utils/save_data_local.dart';
 import 'package:servicecontrolapp/view/page_ordem_servico/components/widget_text_form_equip.dart';
 import 'package:servicecontrolapp/view/page_ordem_servico/page_search_client.dart';
 import 'package:servicecontrolapp/widgets/widget_menu_type_service.dart';
 import 'package:signature/signature.dart';
-
+import 'package:uuid/uuid.dart';
 import '../../helper/helper_pdf.dart';
 import '../../model/model_client.dart';
 import '../../model/model_os.dart';
@@ -50,6 +51,7 @@ class _PageOrdemDeServicoState extends State<PageOrdemDeServico> {
   bool controleCampoCliente = false;
   bool controleCampoAssinatura = false;
   String? tipoAtendimento;
+  final DataLocal _dataLocal = DataLocal();
 
   @override
   void dispose() {
@@ -62,21 +64,21 @@ class _PageOrdemDeServicoState extends State<PageOrdemDeServico> {
     super.dispose();
   }
 
-  Future<String> localPath() async {
-    final directory = await getApplicationSupportDirectory();
-    return directory.path;
-  }
+  // Future<String> localPath() async {
+  //   final directory = await getApplicationSupportDirectory();
+  //   return directory.path;
+  // }
 
-  Future<File> localFile() async {
-    final path = await localPath();
-    return File('$path/exemploOrdemDeServico.pdf');
-  }
+  // Future<File> localFile() async {
+  //   final path = await localPath();
+  //   return File('$path/exemploOrdemDeServico.pdf');
+  // }
 
-  Future<String> getFilePath() async {
-    Directory directory = await getApplicationDocumentsDirectory();
-    String filePath = '${directory.path}/assintura.pgn';
-    return filePath;
-  }
+  // Future<String> getFilePath() async {
+  //   Directory directory = await getApplicationDocumentsDirectory();
+  //   String filePath = '${directory.path}/assintura.pgn';
+  //   return filePath;
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -407,9 +409,14 @@ class _PageOrdemDeServicoState extends State<PageOrdemDeServico> {
                   children: [
                     ElevatedButton(
                         onPressed: () async {
-                          File path = await File(await getFilePath()).create();
+                          //USAR createPathFile DA CLASSE DataLocal
+                          //nome do arquivo assintura.pgn
+                          File path =
+                              await _dataLocal.createPathFile('assintura.pgn');
+                          // File path = await File(await getFilePath()).create();
                           Uint8List? bytes = await controller.toPngBytes();
                           await path.writeAsBytes(bytes!);
+
                           if (controller.isEmpty) {
                             setState(() {
                               controleCampoAssinatura = true;
@@ -419,9 +426,9 @@ class _PageOrdemDeServicoState extends State<PageOrdemDeServico> {
                               controleCampoAssinatura = false;
                             });
                           }
-                          File file = File(await getFilePath());
-                          fileContent = await file.readAsBytes();
-                          setState(() {});
+                          // File file = File(await getFilePath());
+                          fileContent = await path.readAsBytes();
+                          setState(() {}); //preciso arrumar isso
                         },
                         child: const Text('Confirmar')),
                     ElevatedButton(
@@ -436,64 +443,73 @@ class _PageOrdemDeServicoState extends State<PageOrdemDeServico> {
           ),
         ),
       ),
-      bottomNavigationBar: Padding(
-        padding: const EdgeInsets.all(15.0),
-        child: ElevatedButton(
-          onPressed: () async {
-            if (widget.clienteSelecionado == null) {
-              setState(() {
-                controleCampoCliente = true;
-              });
-            } else {
-              setState(() {
-                controleCampoCliente = false;
-              });
-            }
-            if (controller.isEmpty) {
-              setState(() {
-                controleCampoAssinatura = true;
-              });
-            } else {
-              setState(() {
-                controleCampoAssinatura = false;
-              });
-            }
-            if (_formKey.currentState!.validate() &&
-                controleCampoAssinatura == false &&
-                controleCampoCliente == false &&
-                controller.isNotEmpty) {
-              print('passou tudo ok');
-              OrdemServicoModel ordemServicoModel = OrdemServicoModel(
-                cliente: widget.clienteSelecionado!,
-                nomeCliente: nomeController.text,
-                emailCliente: emailController.text,
-                equipamento: equipamentoNomeController.text,
-                marca: marcaNomeController.text,
-                modelo: modeloNomeController.text,
-                ns: numerSerieController.text,
-                tipoAtendimento: tipoAtendimento!,
-                resumoAtendimento: resumoAtendimentoController.text,
-                dataAtendimento: dataAtendimentoController.text,
-                horaInicioAtendimento: horaInicioAtendimentoController.text,
-                horaFinalAtendimento: horaFinalAtendimentoController.text,
-                assinatura: fileContent!,
-              );
-              Provider.of<ProviderPdf>(context, listen: false)
-                  .setEmail(emailController.text);
-              GeneratePdf generatePdf = GeneratePdf(
-                  assinatura: fileContent!, ordemServico: ordemServicoModel);
-              generatePdf.generatePdf();
-              File file = await localFile();
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => ViwerPdf(
-                      path: file.path,
-                    ),
-                  ));
-            }
-          },
-          child: const Text('Gerar pdf'),
+      bottomNavigationBar: Container(
+        height: 70,
+        color: Colors.grey.shade200,
+        child: Padding(
+          padding: const EdgeInsets.all(5.0),
+          child: ElevatedButton(
+            onPressed: () async {
+              if (widget.clienteSelecionado == null) {
+                setState(() {
+                  controleCampoCliente = true;
+                });
+              } else {
+                setState(() {
+                  controleCampoCliente = false;
+                });
+              }
+              if (controller.isEmpty) {
+                setState(() {
+                  controleCampoAssinatura = true;
+                });
+              } else {
+                setState(() {
+                  controleCampoAssinatura = false;
+                });
+              }
+              if (_formKey.currentState!.validate() &&
+                  controleCampoAssinatura == false &&
+                  controleCampoCliente == false &&
+                  controller.isNotEmpty) {
+                print('passou tudo ok');
+                OrdemServicoModel ordemServicoModel = OrdemServicoModel(
+                  idOrdemServico: const Uuid().v1(),
+                  cliente: widget.clienteSelecionado!,
+                  nomeCliente: nomeController.text,
+                  emailCliente: emailController.text,
+                  equipamento: equipamentoNomeController.text,
+                  marca: marcaNomeController.text,
+                  modelo: modeloNomeController.text,
+                  ns: numerSerieController.text,
+                  tipoAtendimento: tipoAtendimento!,
+                  resumoAtendimento: resumoAtendimentoController.text,
+                  dataAtendimento: dataAtendimentoController.text,
+                  horaInicioAtendimento: horaInicioAtendimentoController.text,
+                  horaFinalAtendimento: horaFinalAtendimentoController.text,
+                  assinatura: fileContent!,
+                );
+                Provider.of<ProviderPdf>(context, listen: false)
+                    .setEmail(emailController.text);
+                GeneratePdf generatePdf = GeneratePdf(
+                    assinatura: fileContent!, ordemServico: ordemServicoModel);
+                generatePdf.generatePdf();
+                File file = await _dataLocal
+                    .createPathFile('exemploOrdemDeServico.pdf');
+                Repository().registerOrdemService(
+                    context: context, ordemServicoModel: ordemServicoModel);
+
+                // Navigator.push(
+                //     context,
+                //     MaterialPageRoute(
+                //       builder: (context) => ViwerPdf(
+                //         path: file.path,
+                //       ),
+                //     ));
+              }
+            },
+            child: const Text('Salvar'),
+          ),
         ),
       ),
     );

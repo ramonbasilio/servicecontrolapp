@@ -1,33 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:servicecontrolapp/view/pages_client/page_register_client.dart';
+import 'package:servicecontrolapp/controller/Repository/repository_client.dart';
+import 'package:servicecontrolapp/model/model_os.dart';
 
-import '../../controller/Repository/repository_client.dart';
-import '../../model/model_client.dart';
-import '../../widgets/widget_detail_client.dart';
-
-class PageClient extends StatelessWidget {
-  const PageClient({super.key});
+class PageHistoricoOrdemServico extends StatelessWidget {
+  const PageHistoricoOrdemServico({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey.shade300,
-      appBar: AppBar(
-        title: const Text('Cadastro Clientes'),
-      ),
+      appBar: AppBar(),
       body: Consumer<Repository>(builder: (context, value, child) {
         if (value.loading) {
           return const Center(child: CircularProgressIndicator());
         } else {
-          List<ClienteModel> clients = value.listClients;
+          List<OrdemServicoModel> clients = value.listOrdemService;
           return value.listClients.isEmpty
-              ? Column(
+              ? const Column(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: const [
+                  children: [
                     Center(
                         child: Text(
-                      'Nenhum cliente cadastrado',
+                      'Nenhuma ordem de serviço cadastrado',
                       style: TextStyle(fontSize: 20),
                     )),
                   ],
@@ -45,12 +39,6 @@ class PageClient extends StatelessWidget {
                               color: Colors.white,
                             ),
                             child: ListTile(
-                              onTap: () async {
-                                await WidgetDetailClient.showDetailClient(
-                                  context,
-                                  clients[index],
-                                );
-                              },
                               leading: CircleAvatar(
                                 backgroundColor: Colors.grey.shade800,
                                 child: Text(
@@ -58,7 +46,7 @@ class PageClient extends StatelessWidget {
                                   style: const TextStyle(color: Colors.white),
                                 ),
                               ),
-                              title: Text(clients[index].razaoSocial),
+                              title: Text(clients[index].resumoAtendimento),
                             ),
                           ),
                         ),
@@ -68,18 +56,6 @@ class PageClient extends StatelessWidget {
                 );
         }
       }),
-      floatingActionButton: FloatingActionButton(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-        child: const Icon(Icons.add),
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => const PageRegisterClient(),
-            ),
-          );
-        },
-      ),
     );
   }
 }

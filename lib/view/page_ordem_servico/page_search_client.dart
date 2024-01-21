@@ -8,9 +8,9 @@ class PageSearchClient extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final _provider = Provider.of<RepositoryClient>(context, listen: false);
+    final _provider = Provider.of<Repository>(context, listen: false);
     TextEditingController pesquisaController = TextEditingController();
-    RepositoryClient().repositoryClientProvider(context).loadClients();
+    Repository().repositoryClientProvider(context).loadFirebase();
     List<ClienteModel> clients = _provider.listClients;
     List<ClienteModel> retorno = [];
     return Scaffold(
@@ -25,8 +25,7 @@ class PageSearchClient extends StatelessWidget {
               TextFormField(
                 controller: pesquisaController,
                 onChanged: (value) {
-                  retorno =
-                      _provider.fitraClient(value, clients);
+                  retorno = _provider.fitraClient(value, clients);
                   retorno.forEach((element) {
                     print('Retorno: ${element.razaoSocial}');
                   });
@@ -43,7 +42,7 @@ class PageSearchClient extends StatelessWidget {
                 ),
               ),
               const Divider(),
-              Consumer<RepositoryClient>(builder: (context, _, child) {
+              Consumer<Repository>(builder: (context, _, child) {
                 if (_provider.loading) {
                   return const Center(child: CircularProgressIndicator());
                 } else {
@@ -81,9 +80,9 @@ class PageSearchClient extends StatelessWidget {
                                               print(element);
                                             },
                                           );
-                                          RepositoryClient()
+                                          Repository()
                                               .repositoryClientProvider(context)
-                                              .loadClients();
+                                              .loadFirebase();
                                           print('index: $index');
 
                                           Navigator.pop(
