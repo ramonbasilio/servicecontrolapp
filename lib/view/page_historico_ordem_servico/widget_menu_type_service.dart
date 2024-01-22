@@ -1,18 +1,23 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-class WidgetMenuTypeService extends StatefulWidget {
+class WidgetMenuTypeService2 extends StatefulWidget {
+  String? dropdownvalue;
   final String? Function(String?)? validator;
   final void Function(String?) returnDropDownValue;
-  const WidgetMenuTypeService(
-      {this.validator, required this.returnDropDownValue, super.key});
+  WidgetMenuTypeService2(
+    this.dropdownvalue, {
+    this.validator,
+    required this.returnDropDownValue,
+    super.key,
+  });
 
   @override
-  State<WidgetMenuTypeService> createState() => _WidgetMenuTypeServiceState();
+  State<WidgetMenuTypeService2> createState() => _WidgetMenuTypeServiceState();
 }
 
-class _WidgetMenuTypeServiceState extends State<WidgetMenuTypeService> {
-  String? dropdownvalue;
+class _WidgetMenuTypeServiceState extends State<WidgetMenuTypeService2> {
+  // String? dropdownvalue;
 
   List<String> tipoAtendimento = [
     "Corretiva",
@@ -49,7 +54,7 @@ class _WidgetMenuTypeServiceState extends State<WidgetMenuTypeService> {
             focusColor: Colors.white,
             dropdownColor: Colors.white,
             isExpanded: true,
-            value: dropdownvalue,
+            value: widget.dropdownvalue,
             items: tipoAtendimento.map((String items) {
               return DropdownMenuItem(
                   value: items,
@@ -60,8 +65,8 @@ class _WidgetMenuTypeServiceState extends State<WidgetMenuTypeService> {
             }).toList(),
             onChanged: (String? newValue) {
               setState(() {
-                dropdownvalue = newValue ?? "";
-                widget.returnDropDownValue.call(dropdownvalue);
+                widget.dropdownvalue = newValue ?? "";
+                widget.returnDropDownValue.call(widget.dropdownvalue);
               });
             }),
       ),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:servicecontrolapp/controller/Repository/repository_client.dart';
 import 'package:servicecontrolapp/model/model_os.dart';
+import 'package:servicecontrolapp/view/page_historico_ordem_servico/page_detail_hist_ordem_service.dart';
 
 class PageHistoricoOrdemServico extends StatelessWidget {
   const PageHistoricoOrdemServico({super.key});
@@ -14,7 +15,7 @@ class PageHistoricoOrdemServico extends StatelessWidget {
         if (value.loading) {
           return const Center(child: CircularProgressIndicator());
         } else {
-          List<OrdemServicoModel> clients = value.listOrdemService;
+          List<OrdemServicoModel> ordemServico = value.listOrdemService;
           return value.listClients.isEmpty
               ? const Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -27,7 +28,7 @@ class PageHistoricoOrdemServico extends StatelessWidget {
                   ],
                 )
               : ListView.builder(
-                  itemCount: clients.length,
+                  itemCount: ordemServico.length,
                   itemBuilder: (context, index) {
                     return Column(
                       children: [
@@ -39,6 +40,16 @@ class PageHistoricoOrdemServico extends StatelessWidget {
                               color: Colors.white,
                             ),
                             child: ListTile(
+                              onTap: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          PageDetailHistOrdemService(
+                                              ordemServico:
+                                                  ordemServico[index]),
+                                    ));
+                              },
                               leading: CircleAvatar(
                                 backgroundColor: Colors.grey.shade800,
                                 child: Text(
@@ -46,7 +57,8 @@ class PageHistoricoOrdemServico extends StatelessWidget {
                                   style: const TextStyle(color: Colors.white),
                                 ),
                               ),
-                              title: Text(clients[index].resumoAtendimento),
+                              title:
+                                  Text(ordemServico[index].resumoAtendimento),
                             ),
                           ),
                         ),
