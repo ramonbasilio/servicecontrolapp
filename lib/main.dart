@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:servicecontrolapp/helper/helper_http.dart';
 import 'package:servicecontrolapp/page_teste.dart';
 import 'package:servicecontrolapp/controller/provider/provider.dart';
 import 'package:servicecontrolapp/view/page_inicial.dart';
@@ -22,6 +23,7 @@ void main() async {
 
   runApp(MultiProvider(
     providers: [
+      ChangeNotifierProvider<Http>(create: (context) => Http()),
       ChangeNotifierProvider<Repository>(create: (context) => Repository()),
       ChangeNotifierProvider<ProviderPdf>(create: (context) => ProviderPdf()),
     ],

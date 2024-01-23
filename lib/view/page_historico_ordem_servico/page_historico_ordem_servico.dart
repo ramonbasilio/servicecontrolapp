@@ -9,6 +9,8 @@ class PageHistoricoOrdemServico extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Repository().repositoryClientProvider(context).loadFirebase();
+
     return Scaffold(
       appBar: AppBar(),
       body: Consumer<Repository>(builder: (context, value, child) {

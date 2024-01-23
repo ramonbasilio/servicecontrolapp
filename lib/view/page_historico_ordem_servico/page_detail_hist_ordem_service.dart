@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/foundation.dart';
@@ -8,6 +10,7 @@ import 'package:servicecontrolapp/controller/Repository/repository_client.dart';
 import 'package:servicecontrolapp/controller/provider/provider.dart';
 import 'package:servicecontrolapp/extensions/time.dart';
 import 'package:servicecontrolapp/helper/helper_http.dart';
+import 'package:servicecontrolapp/helper/helper_page_viwer_pdf.dart';
 import 'package:servicecontrolapp/helper/helper_pdf.dart';
 import 'package:servicecontrolapp/model/model_client.dart';
 import 'package:servicecontrolapp/model/model_os.dart';
@@ -67,6 +70,7 @@ class _PageDetailHistOrdemService extends State<PageDetailHistOrdemService> {
 
   @override
   void initState() {
+    tipoAtendimento = widget.ordemServico.tipoAtendimento;
     equipamentoNomeController.text = widget.ordemServico.equipamento;
     marcaNomeController.text = widget.ordemServico.marca;
     modeloNomeController.text = widget.ordemServico.modelo;
@@ -85,6 +89,7 @@ class _PageDetailHistOrdemService extends State<PageDetailHistOrdemService> {
 
   @override
   Widget build(BuildContext context) {
+    final loadingProvider = Provider.of<Http>(context);
     return Scaffold(
       appBar: AppBar(
         title: const Text('Criar ordem de serviço'),
@@ -445,57 +450,129 @@ class _PageDetailHistOrdemService extends State<PageDetailHistOrdemService> {
           ),
         ),
       ),
-      bottomNavigationBar: Container(
-        height: 70,
-        color: Colors.grey.shade200,
-        child: Padding(
-          padding: const EdgeInsets.all(5.0),
-          child: ElevatedButton(
-            onPressed: () async {
-              if (widget.clienteSelecionado == null) {
-                setState(() {
-                  controleCampoCliente = true;
-                });
-              } else {
-                setState(() {
-                  controleCampoCliente = false;
-                });
-              }
-              if (true) {
-                print('passou tudo ok');
-                OrdemServicoModel ordemServicoModel = OrdemServicoModel(
-                  idOrdemServico: const Uuid().v1(),
-                  cliente: widget.clienteSelecionado!,
-                  nomeCliente: nomeController.text,
-                  emailCliente: emailController.text,
-                  equipamento: equipamentoNomeController.text,
-                  marca: marcaNomeController.text,
-                  modelo: modeloNomeController.text,
-                  ns: numerSerieController.text,
-                  tipoAtendimento: tipoAtendimento!,
-                  resumoAtendimento: resumoAtendimentoController.text,
-                  dataAtendimento: dataAtendimentoController.text,
-                  horaInicioAtendimento: horaInicioAtendimentoController.text,
-                  horaFinalAtendimento: horaFinalAtendimentoController.text,
-                  assinatura: fileContent!,
-                );
-                Provider.of<ProviderPdf>(context, listen: false)
-                    .setEmail(emailController.text);
-                GeneratePdf generatePdf = GeneratePdf(
-                    assinatura: fileContent!, ordemServico: ordemServicoModel);
-                generatePdf.generatePdf();
-                File file = await _dataLocal
-                    .createPathFile('exemploOrdemDeServico.pdf');
-                Uint8List pdfbytes = await file.readAsBytes();
-                String base64pdf = base64Encode(pdfbytes);
-                // ignore: use_build_context_synchronously
-                await Http().callCloudFunc(
-                  base64pdf,
-                  widget.ordemServico.emailCliente,
-                );
-              }
-            },
-            child: const Text('Salvar'),
+      bottomNavigationBar: Consumer<Http>(
+        builder: (context, value, child) => Container(
+          height: 70,
+          color: Colors.grey.shade200,
+          child: Padding(
+            padding: const EdgeInsets.all(5.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                ElevatedButton(
+                  onPressed: () async {
+                    if (widget.clienteSelecionado == null) {
+                      setState(() {
+                        controleCampoCliente = true;
+                      });
+                    } else {
+                      setState(() {
+                        controleCampoCliente = false;
+                      });
+                    }
+                    if (_formKey.currentState!.validate()) {
+                      print('passou tudo ok');
+                      OrdemServicoModel ordemServicoModel = OrdemServicoModel(
+                        idOrdemServico: const Uuid().v1(),
+                        cliente: widget.clienteSelecionado!,
+                        nomeCliente: nomeController.text,
+                        emailCliente: emailController.text,
+                        equipamento: equipamentoNomeController.text,
+                        marca: marcaNomeController.text,
+                        modelo: modeloNomeController.text,
+                        ns: numerSerieController.text,
+                        tipoAtendimento: tipoAtendimento!,
+                        resumoAtendimento: resumoAtendimentoController.text,
+                        dataAtendimento: dataAtendimentoController.text,
+                        horaInicioAtendimento:
+                            horaInicioAtendimentoController.text,
+                        horaFinalAtendimento:
+                            horaFinalAtendimentoController.text,
+                        assinatura: widget.ordemServico.assinatura,
+                      );
+                      GeneratePdf generatePdf = GeneratePdf(
+                          assinatura: widget.ordemServico.assinatura,
+                          ordemServico: ordemServicoModel);
+                      generatePdf.generatePdf();
+                      File file = await _dataLocal
+                          .createPathFile('exemploOrdemDeServico.pdf');
+
+                      Uint8List pdfbytes = await file.readAsBytes();
+                      String base64pdf = base64Encode(pdfbytes);
+                      await Http().funcaoTeste();
+                      // await Http().callCloudFunc(
+                      //   base64pdf,
+                      //   widget.ordemServico.emailCliente,
+                      // );
+                    }
+                  },
+                  child: Consumer<Http>(
+                    builder: (context, value, child) {
+                      print(value.loading);
+                      return value.loading == true
+                          ? const SizedBox(
+                              height: 20, width: 20, child: Text('enviando...'))
+                          : Icon(Icons.email);
+                    },
+                  ),
+                ),
+                ElevatedButton(
+                  onPressed: () async {
+                    if (widget.clienteSelecionado == null) {
+                      setState(() {
+                        controleCampoCliente = true;
+                      });
+                    } else {
+                      setState(() {
+                        controleCampoCliente = false;
+                      });
+                    }
+                    if (_formKey.currentState!.validate()) {
+                      print('passou tudo ok');
+                      OrdemServicoModel ordemServicoModel = OrdemServicoModel(
+                        idOrdemServico: const Uuid().v1(),
+                        cliente: widget.clienteSelecionado!,
+                        nomeCliente: nomeController.text,
+                        emailCliente: emailController.text,
+                        equipamento: equipamentoNomeController.text,
+                        marca: marcaNomeController.text,
+                        modelo: modeloNomeController.text,
+                        ns: numerSerieController.text,
+                        tipoAtendimento: tipoAtendimento!,
+                        resumoAtendimento: resumoAtendimentoController.text,
+                        dataAtendimento: dataAtendimentoController.text,
+                        horaInicioAtendimento:
+                            horaInicioAtendimentoController.text,
+                        horaFinalAtendimento:
+                            horaFinalAtendimentoController.text,
+                        assinatura: widget.ordemServico.assinatura,
+                      );
+                      GeneratePdf generatePdf = GeneratePdf(
+                          assinatura: widget.ordemServico.assinatura,
+                          ordemServico: ordemServicoModel);
+                      generatePdf.generatePdf();
+                      File file = await _dataLocal
+                          .createPathFile('exemploOrdemDeServico.pdf');
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ViwerPdf(
+                              path: file.path,
+                            ),
+                          ));
+
+                      // Uint8List pdfbytes = await file.readAsBytes();
+                      // String base64pdf = base64Encode(pdfbytes);
+                      // await Http().callCloudFunc(
+                      //   base64pdf,
+                      //   widget.ordemServico.emailCliente,
+                      // );
+                    }
+                  },
+                  child: const Icon(Icons.save),
+                ),
+              ],
+            ),
           ),
         ),
       ),
