@@ -38,7 +38,7 @@ class GeneratePdf {
                   mainAxisAlignment: pw.MainAxisAlignment.spaceAround,
                   children: [
                     pw.Image(logo, height: 25),
-                    pw.Text('ORDEM DE SERVIÇO',
+                    pw.Text('ORDEM DE SERVIÇO - ${ordemServico.idOrdemServico}',
                         style: const pw.TextStyle(fontSize: 25)),
                   ],
                 ),
@@ -176,7 +176,7 @@ class GeneratePdf {
       ),
     );
     final pdf = await doc.save();
-    DataLocal().saveFile(pdf, 'exemploOrdemDeServico.pdf');
+    DataLocal().saveFile(pdf, 'os-${ordemServico.idOrdemServico}.pdf');
   }
 
   pw.Center _dotWidget(pw.Context context) {

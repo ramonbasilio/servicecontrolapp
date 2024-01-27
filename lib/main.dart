@@ -23,7 +23,6 @@ void main() async {
 
   runApp(MultiProvider(
     providers: [
-      ChangeNotifierProvider<Http>(create: (context) => Http()),
       ChangeNotifierProvider<Repository>(create: (context) => Repository()),
       ChangeNotifierProvider<ProviderPdf>(create: (context) => ProviderPdf()),
     ],

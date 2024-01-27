@@ -49,4 +49,26 @@ class FirebaseService {
       print('Falha ao salvar pdf');
     }
   }
+
+  Future<String> getLastSequence(String ano) async {
+    QuerySnapshot querySnapshot = await db
+        .collection('Numero_ordem_de_servico')
+        .where(ano)
+        .orderBy('controle')
+        .get();
+    if (querySnapshot.docs.isNotEmpty) {
+      int controle = querySnapshot.docs.first['controle'];
+      await db
+          .collection('Numero_ordem_de_servico')
+          .doc('2024')
+          .set({'controle': controle + 1});
+      return '${controle.toString().padLeft(4, '0')}$ano';
+    } else {
+      await db
+          .collection('Numero_ordem_de_servico')
+          .doc('2024')
+          .set({'controle': 1});
+      return '${'1'.padLeft(4, '0')}$ano';
+    }
+  }
 }

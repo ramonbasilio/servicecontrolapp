@@ -5,6 +5,7 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:servicecontrolapp/controller/Firebase/firebase_service.dart';
 import 'package:servicecontrolapp/controller/Repository/repository_client.dart';
 import 'package:servicecontrolapp/extensions/time.dart';
 import 'package:servicecontrolapp/helper/helper_page_viwer_pdf.dart';
@@ -472,9 +473,10 @@ class _PageOrdemDeServicoState extends State<PageOrdemDeServico> {
                   controleCampoAssinatura == false &&
                   controleCampoCliente == false &&
                   controller.isNotEmpty) {
-                print('passou tudo ok');
+                String numOS = await FirebaseService()
+                    .getLastSequence(DateTime.now().year.toString());
                 OrdemServicoModel ordemServicoModel = OrdemServicoModel(
-                  idOrdemServico: const Uuid().v1(),
+                  idOrdemServico: numOS,
                   cliente: widget.clienteSelecionado!,
                   nomeCliente: nomeController.text,
                   emailCliente: emailController.text,
@@ -494,18 +496,9 @@ class _PageOrdemDeServicoState extends State<PageOrdemDeServico> {
                 GeneratePdf generatePdf = GeneratePdf(
                     assinatura: fileContent!, ordemServico: ordemServicoModel);
                 generatePdf.generatePdf();
-                File file = await _dataLocal
-                    .createPathFile('exemploOrdemDeServico.pdf');
+
                 Repository().registerOrdemService(
                     context: context, ordemServicoModel: ordemServicoModel);
-
-                // Navigator.push(
-                //     context,
-                //     MaterialPageRoute(
-                //       builder: (context) => ViwerPdf(
-                //         path: file.path,
-                //       ),
-                //     ));
               }
             },
             child: const Text('Salvar'),

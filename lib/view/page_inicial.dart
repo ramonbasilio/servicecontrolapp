@@ -1,4 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:servicecontrolapp/controller/Firebase/firebase_service.dart';
 import 'package:servicecontrolapp/helper/helper_http.dart';
 import 'package:servicecontrolapp/view/page_historico_ordem_servico/page_historico_ordem_servico.dart';
 import 'package:servicecontrolapp/view/page_ordem_servico/page_ordem_servico.dart';
@@ -41,11 +43,6 @@ class PageInicial extends StatelessWidget {
                       nome: 'Inventário',
                     ),
                   ])),
-              ElevatedButton(
-                  onPressed: () async {
-                    // await Http().callCloudFunc();
-                  },
-                  child: const Text('Teste Email'))
             ],
           ),
         ));

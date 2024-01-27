@@ -51,7 +51,7 @@ class _ViwerPdfState extends State<ViwerPdf> {
                 email = Provider.of<ProviderPdf>(context, listen: false)
                     .emailClient;
                 print('email do cliente: $email');
-                await Http().callCloudFunc(base64pdf, email);
+                // await Http().callCloudFunc(base64pdf, email);
                 if (kDebugMode) {
                   print('pdf base64: $base64pdf');
                 }
