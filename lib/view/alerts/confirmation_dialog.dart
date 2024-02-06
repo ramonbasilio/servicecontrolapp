@@ -5,13 +5,19 @@ import 'package:servicecontrolapp/view/pages_client/page_client.dart';
 import '../../controller/Repository/repository_client.dart';
 
 class ConfirmationDialog {
-  static Future<void> dialogiBuilder(BuildContext context, String id) async {
+  static Future<void> dialogiBuilder({
+    required BuildContext context,
+    required String id,
+    required String titulo,
+    required String conteudo,
+    required String colecao,
+  }) async {
     showDialog(
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: const Text('Deletar cliente'),
-            content: const Text('Você realmente deseja remover esse cliente'),
+            title: Text(titulo),
+            content: Text(conteudo),
             actions: [
               TextButton(
                 onPressed: () {
@@ -21,7 +27,7 @@ class ConfirmationDialog {
               ),
               TextButton(
                 onPressed: () {
-                  Repository().deleteClient(id).then((value) {
+                  Repository().deleteData(colecao, id).then((value) {
                     Repository()
                         .repositoryClientProvider(context)
                         .loadFirebase();

@@ -3,20 +3,45 @@ import 'dart:typed_data';
 import 'package:path_provider/path_provider.dart';
 
 class DataLocal {
-  Future<File> createPathFile(String nameFile) async {
-    final directory = await getApplicationSupportDirectory();
-    final path = directory.path;
-    return File('$path/$nameFile');
+  Future<String> get _localPath async {
+    final directory = await getApplicationDocumentsDirectory();
+    return directory.path;
   }
 
-  Future<String> getFilePath(String nameFile) async {
-    Directory directory = await getApplicationDocumentsDirectory();
-    String filePath = '${directory.path}/$nameFile';
-    return filePath;
+  Future<File> get _localFile async {
+    final path = await _localPath;
+    return File('$path/pdfteste.pdf');
   }
 
-  Future<File> saveFile(Uint8List data, String nameFile) async {
-    final file = await createPathFile(nameFile);
-    return file.writeAsBytes(data);
+  // Future<File> createPathFile(String nameFile) async {
+  //   final path = await _localPath;
+  //   return File('$path/$nameFile');
+  // }
+
+  // Future<String> getFilePath(String nameFile) async {
+  //   final directory = await _localPath;
+  //   String filePath = '$directory/$nameFile';
+  //   return filePath;
+  // }
+
+  Future<void> savePdf(Uint8List pdf) async {
+    final file = await _localFile;
+    await file.writeAsBytes(pdf);
+  }
+
+  Future<Uint8List> readPdf() async {
+    try {
+      final file = await _localFile;
+      final conteudo = await file.readAsBytes();
+      print('Conteudo lido: $conteudo');
+      return conteudo;
+    } catch (e) {
+      throw 'Houve um erro ao ler pdf: $e';
+    }
+  }
+
+  Future<File> createPathFile(String fileName) async {
+    String path = await _localPath;
+    return File('$path/$fileName');
   }
 }

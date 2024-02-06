@@ -18,7 +18,7 @@ class PageInicial extends StatelessWidget {
     return Scaffold(
         appBar: AppBar(
           title: const Center(
-            child: Text('Service Control 1.0'),
+            child: Text('Full Medcare App'),
           ),
         ),
         body: SingleChildScrollView(

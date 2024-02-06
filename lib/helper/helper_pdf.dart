@@ -9,7 +9,7 @@ class GeneratePdf {
   Uint8List? assinatura;
   GeneratePdf({this.assinatura, required this.ordemServico});
 
-  generatePdf() async {
+  Future<void> generatePdf() async {
     final logo = pw.MemoryImage(
       (await rootBundle.load('assets/logo.png')).buffer.asUint8List(),
     );
@@ -176,7 +176,7 @@ class GeneratePdf {
       ),
     );
     final pdf = await doc.save();
-    DataLocal().saveFile(pdf, 'os-${ordemServico.idOrdemServico}.pdf');
+    DataLocal().savePdf(pdf).then((value) => print('pdf salvo'));
   }
 
   pw.Center _dotWidget(pw.Context context) {

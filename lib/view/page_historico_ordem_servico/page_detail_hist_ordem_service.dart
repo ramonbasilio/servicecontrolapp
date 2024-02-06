@@ -6,6 +6,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:servicecontrolapp/controller/Firebase/firebase_service.dart';
 import 'package:servicecontrolapp/controller/Repository/repository_client.dart';
 import 'package:servicecontrolapp/controller/provider/provider.dart';
 import 'package:servicecontrolapp/extensions/time.dart';
@@ -55,7 +56,7 @@ class _PageDetailHistOrdemService extends State<PageDetailHistOrdemService> {
   bool controleCampoCliente = false;
   bool controleCampoAssinatura = false;
   String? tipoAtendimento;
-  final DataLocal _dataLocal = DataLocal();
+  // final DataLocal _dataLocal = DataLocal();
   final loading = ValueNotifier<bool>(false);
 
   @override
@@ -505,11 +506,12 @@ class _PageDetailHistOrdemService extends State<PageDetailHistOrdemService> {
                     GeneratePdf generatePdf = GeneratePdf(
                         assinatura: widget.ordemServico.assinatura,
                         ordemServico: ordemServicoModel);
-                    generatePdf.generatePdf();
-                    File filePDf1 = await _dataLocal.createPathFile(
-                        'os-${widget.ordemServico.idOrdemServico}.pdf');
-                    Uint8List pdfbytes = await filePDf1.readAsBytes();
+                    await generatePdf.generatePdf();
+
+                    Uint8List pdfbytes = await DataLocal().readPdf();
+                    print('Leitura pdf: $pdfbytes');
                     String base64pdf = base64Encode(pdfbytes);
+                    await FirebaseService().savePdfFirestore(pdfbytes);
                     loading.value = true;
                     await Http().callCloudFunc(
                       base64pdf,
@@ -553,16 +555,17 @@ class _PageDetailHistOrdemService extends State<PageDetailHistOrdemService> {
                     GeneratePdf generatePdf = GeneratePdf(
                         assinatura: widget.ordemServico.assinatura,
                         ordemServico: ordemServicoModel);
+
                     generatePdf.generatePdf();
-                    File file = await _dataLocal.createPathFile(
-                        'os-${widget.ordemServico.idOrdemServico}.pdf');
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => ViwerPdf(
-                            path: file.path,
-                          ),
-                        ));
+                    // File file =
+                    //     await _dataLocal.createPathFile('ordem_de_servico.pdf');
+                    // Navigator.push(
+                    //     context,
+                    //     MaterialPageRoute(
+                    //       builder: (context) => ViwerPdf(
+                    //         path: file.path,
+                    //       ),
+                    //     ));
 
                     // Uint8List pdfbytes = await file.readAsBytes();
                     // String base64pdf = base64Encode(pdfbytes);

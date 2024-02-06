@@ -22,9 +22,9 @@ class PageClient extends StatelessWidget {
         } else {
           List<ClienteModel> clients = value.listClients;
           return value.listClients.isEmpty
-              ? Column(
+              ? const Column(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: const [
+                  children: [
                     Center(
                         child: Text(
                       'Nenhum cliente cadastrado',

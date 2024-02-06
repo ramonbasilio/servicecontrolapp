@@ -39,7 +39,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       navigatorKey: navKey,
       debugShowCheckedModeBanner: false,
-      title: 'Service Control 1.0',
+      title: 'Full Medcare App',
       theme: ThemeData(
         useMaterial3: false,
         primarySwatch: Colors.grey,

@@ -103,8 +103,8 @@ class Repository extends ChangeNotifier {
   Repository repositoryClientProvider(BuildContext context) =>
       Provider.of<Repository>(context, listen: false);
 
-  Future<void> deleteClient(String id) async {
-    await FirebaseService().deleteClientFirestore('Clientes', id);
+  Future<void> deleteData(String colletion, String id) async {
+    await FirebaseService().deleteClientFirestore(colletion, id);
     notifyListeners();
   }
 

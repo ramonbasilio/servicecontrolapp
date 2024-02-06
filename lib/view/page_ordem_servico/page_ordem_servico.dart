@@ -491,14 +491,14 @@ class _PageOrdemDeServicoState extends State<PageOrdemDeServico> {
                   horaFinalAtendimento: horaFinalAtendimentoController.text,
                   assinatura: fileContent!,
                 );
-                Provider.of<ProviderPdf>(context, listen: false)
-                    .setEmail(emailController.text);
-                GeneratePdf generatePdf = GeneratePdf(
-                    assinatura: fileContent!, ordemServico: ordemServicoModel);
-                generatePdf.generatePdf();
-
+                // Provider.of<ProviderPdf>(context, listen: false)
+                //     .setEmail(emailController.text);
+                // GeneratePdf generatePdf = GeneratePdf(
+                //     assinatura: fileContent!, ordemServico: ordemServicoModel);
+                // generatePdf.generatePdf();
                 Repository().registerOrdemService(
                     context: context, ordemServicoModel: ordemServicoModel);
+                Navigator.pop(context);
               }
             },
             child: const Text('Salvar'),

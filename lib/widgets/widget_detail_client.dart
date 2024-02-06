@@ -8,7 +8,6 @@ class WidgetDetailClient {
     ClienteModel client,
   ) async {
     showModalBottomSheet(
-
         context: context,
         builder: (BuildContext _) {
           return Padding(
@@ -23,8 +22,8 @@ class WidgetDetailClient {
                       padding: EdgeInsets.all(10),
                       child: Text(
                         'DADOS DOS CLIENTE',
-                        style:
-                            TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                        style: TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.bold),
                       ),
                     ),
                     Column(
@@ -101,9 +100,13 @@ class WidgetDetailClient {
                             onPressed: () async {
                               Navigator.pop(context);
                               ConfirmationDialog.dialogiBuilder(
-                                  context, client.id);
+                                  context: context,
+                                  id: client.id,
+                                  titulo: 'Deletar cliente',
+                                  conteudo: 'Você deseja remover esse cliente?',
+                                  colecao: 'Clientes');
                               //Navigator.pop(context);
-              
+
                               // RepositoryClient()
                               //     .deleteClient(client.id)
                               //     .then((value) {
