@@ -15,7 +15,6 @@ Para armazenamento dos dados está sendo utilizado o Cloud Firestore do Firebase
   <img src='https://github.com/ramonbasilio/servicecontrolapp/assets/37743546/47344311-a7ed-4af1-9b5b-51c33c688630', width="300px>
 </div>
 
-https://github.com/ramonbasilio/servicecontrolapp/issues/2#issue-2119907457
 
 
 
