@@ -93,7 +93,7 @@ class _PageDetailHistOrdemService extends State<PageDetailHistOrdemService> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Criar ordem de serviço'),
+        title: Text('Ordem de Serviço: ${widget.ordemServico.idOrdemServico}'),
       ),
       body: Form(
         key: _formKey,
@@ -411,41 +411,6 @@ class _PageDetailHistOrdemService extends State<PageDetailHistOrdemService> {
                         height: 200,
                       )),
                 ),
-                // Row(
-                //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                //   children: [
-                //     ElevatedButton(
-                //         onPressed: () async {
-                //           //USAR createPathFile DA CLASSE DataLocal
-                //           //nome do arquivo assintura.pgn
-                //           File path =
-                //               await _dataLocal.createPathFile('assinatura.pgn');
-                //           // File path = await File(await getFilePath()).create();
-                //           Uint8List? bytes =
-                //               await controllerAssinatura.toPngBytes();
-                //           await path.writeAsBytes(bytes!);
-
-                //           if (controllerAssinatura.isEmpty) {
-                //             setState(() {
-                //               controleCampoAssinatura = true;
-                //             });
-                //           } else {
-                //             setState(() {
-                //               controleCampoAssinatura = false;
-                //             });
-                //           }
-                //           // File file = File(await getFilePath());
-                //           fileContent = await path.readAsBytes();
-                //           setState(() {}); //preciso arrumar isso
-                //         },
-                //         child: const Text('Confirmar')),
-                //     ElevatedButton(
-                //         onPressed: () {
-                //           controllerAssinatura.clear();
-                //         },
-                //         child: const Text('Limpar')),
-                //   ],
-                // ),
               ],
             ),
           ),
@@ -507,14 +472,17 @@ class _PageDetailHistOrdemService extends State<PageDetailHistOrdemService> {
                         assinatura: widget.ordemServico.assinatura,
                         ordemServico: ordemServicoModel);
                     await generatePdf.generatePdf();
-
-                    Uint8List pdfbytes = await DataLocal().readPdf();
-                    print('Leitura pdf: $pdfbytes');
-                    String base64pdf = base64Encode(pdfbytes);
-                    await FirebaseService().savePdfFirestore(pdfbytes);
+                    Uint8List pdfbytes = await DataLocal()
+                        .readPdf('${widget.ordemServico.idOrdemServico}.pdf');
+                    Repository().registerOrdemService(
+                        context: context, ordemServicoModel: ordemServicoModel);
                     loading.value = true;
+                    Repository()
+                        .repositoryClientProvider(context)
+                        .loadFirebase();
                     await Http().callCloudFunc(
-                      base64pdf,
+                      context,
+                      pdfbytes,
                       widget.ordemServico,
                     );
                     loading.value = false;
@@ -555,27 +523,19 @@ class _PageDetailHistOrdemService extends State<PageDetailHistOrdemService> {
                     GeneratePdf generatePdf = GeneratePdf(
                         assinatura: widget.ordemServico.assinatura,
                         ordemServico: ordemServicoModel);
-
-                    generatePdf.generatePdf();
-                    // File file =
-                    //     await _dataLocal.createPathFile('ordem_de_servico.pdf');
-                    // Navigator.push(
-                    //     context,
-                    //     MaterialPageRoute(
-                    //       builder: (context) => ViwerPdf(
-                    //         path: file.path,
-                    //       ),
-                    //     ));
-
-                    // Uint8List pdfbytes = await file.readAsBytes();
-                    // String base64pdf = base64Encode(pdfbytes);
-                    // await Http().callCloudFunc(
-                    //   base64pdf,
-                    //   widget.ordemServico.emailCliente,
-                    // );
+                    await generatePdf.generatePdf();
+                    File file = await DataLocal().createPathFile(
+                        '${widget.ordemServico.idOrdemServico}.pdf');
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ViwerPdf(
+                            path: file.path,
+                          ),
+                        ));
                   }
                 },
-                child: const Icon(Icons.save),
+                child: const Icon(Icons.share),
               ),
             ],
           ),

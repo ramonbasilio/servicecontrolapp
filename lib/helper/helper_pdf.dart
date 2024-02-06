@@ -176,7 +176,9 @@ class GeneratePdf {
       ),
     );
     final pdf = await doc.save();
-    DataLocal().savePdf(pdf).then((value) => print('pdf salvo'));
+    DataLocal()
+        .savePdf(pdf, '${ordemServico.idOrdemServico}.pdf')
+        .then((value) => print('pdf salvo'));
   }
 
   pw.Center _dotWidget(pw.Context context) {

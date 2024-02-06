@@ -20,15 +20,15 @@ class ViwerPdf extends StatefulWidget {
 }
 
 class _ViwerPdfState extends State<ViwerPdf> {
-  Future<String> localPath() async {
-    final directory = await getApplicationSupportDirectory();
-    return directory.path;
-  }
+  // Future<String> localPath() async {
+  //   final directory = await getApplicationSupportDirectory();
+  //   return directory.path;
+  // }
 
-  Future<File> localFile() async {
-    final path = await localPath();
-    return File('$path/exemploOrdemDeServico.pdf');
-  }
+  // Future<File> localFile() async {
+  //   final path = await localPath();
+  //   return File('$path/exemploOrdemDeServico.pdf');
+  // }
 
   String email = '';
   final Completer<PDFViewController> _controller =
@@ -41,24 +41,13 @@ class _ViwerPdfState extends State<ViwerPdf> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        actions: [
-          ElevatedButton(
-              onPressed: () async {
-                File file = await localFile();
-                Uint8List pdfbytes = await file.readAsBytes();
-                String base64pdf = base64Encode(pdfbytes);
-                // ignore: use_build_context_synchronously
-                email = Provider.of<ProviderPdf>(context, listen: false)
-                    .emailClient;
-                print('email do cliente: $email');
-                // await Http().callCloudFunc(base64pdf, email);
-                if (kDebugMode) {
-                  print('pdf base64: $base64pdf');
-                }
-                Share.shareXFiles([XFile(file.path)]);
-              },
-              child: const Text('Share'))
-        ],
+        title: const Text('Compartilhar Ordem de Serviço'),
+      ),
+      floatingActionButton: FloatingActionButton(
+        child: const Icon(Icons.share),
+        onPressed: () async {
+          Share.shareXFiles([XFile(widget.path)]);
+        },
       ),
       body: Stack(
         children: [

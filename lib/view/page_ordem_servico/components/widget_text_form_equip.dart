@@ -26,6 +26,9 @@ class _WidgetTextFormEquipState extends State<WidgetTextFormEquip> {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: TextFormField(
+        onChanged: (value) {
+          widget.equipamentoNomeController.text = value;
+        },
         maxLines: widget.isMaxLine == null ? 1 : 15,
         validator: widget.validator!,
         controller: widget.equipamentoNomeController,

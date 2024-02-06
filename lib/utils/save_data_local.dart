@@ -8,9 +8,9 @@ class DataLocal {
     return directory.path;
   }
 
-  Future<File> get _localFile async {
+  Future<File> _localFile(String pdfName) async {
     final path = await _localPath;
-    return File('$path/pdfteste.pdf');
+    return File('$path/$pdfName');
   }
 
   // Future<File> createPathFile(String nameFile) async {
@@ -24,14 +24,14 @@ class DataLocal {
   //   return filePath;
   // }
 
-  Future<void> savePdf(Uint8List pdf) async {
-    final file = await _localFile;
+  Future<void> savePdf(Uint8List pdf, String pdfName) async {
+    final file = await _localFile(pdfName);
     await file.writeAsBytes(pdf);
   }
 
-  Future<Uint8List> readPdf() async {
+  Future<Uint8List> readPdf(String pdfName) async {
     try {
-      final file = await _localFile;
+      final file = await _localFile(pdfName);
       final conteudo = await file.readAsBytes();
       print('Conteudo lido: $conteudo');
       return conteudo;

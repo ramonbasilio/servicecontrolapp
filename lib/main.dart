@@ -42,7 +42,7 @@ class MyApp extends StatelessWidget {
       title: 'Full Medcare App',
       theme: ThemeData(
         useMaterial3: false,
-        primarySwatch: Colors.grey,
+        primarySwatch: Colors.blue,
       ),
       home: const PageInicial(),
     );
